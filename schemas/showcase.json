@@ -4,14 +4,10 @@
   "items": { "$ref": "#/definitions/showcase" },
 
   "definitions": {
-    "baseProperties": {
-      "properties": {
-        "name": { "type": "string", "default": "無名の作品" },
-        "type": { "$ref": "#/definitions/typeEnum" },
-        "flags": { "$ref": "#/definitions/flags" }
-      },
-      "required": ["name", "type"],
+    "showcase": {
       "allOf": [
+        { "$ref": "#/definitions/baseProperties" },
+        { "$ref": "#/definitions/extraProperties" },
         {
           "if": {
             "properties": { "type": { "const": "embed" } }
@@ -60,17 +56,28 @@
             "$ref": "#/definitions/groupedShowcase"
           }
         }
-      ]
+      ],
+      "if": {
+        "not": { "properties": { "type": { "const": "grouped" } } },
+        "then": { "$ref": "#/definitions/extraProperties" }
+      }
     },
-
-    "showcase": {
+    "baseProperties": {
+      "properties": {
+        "name": { "type": "string", "default": "無名の作品" },
+        "type": { "$ref": "#/definitions/typeEnum" },
+        "flags": { "$ref": "#/definitions/flags" },
+        "version": { "$ref": "#/definitions/version" }
+      },
+      "required": ["name", "type"]
+    },
+    "extraProperties": {
       "type": "object",
       "properties": {
         "icon": { "$ref": "#/definitions/iconEnum" },
         "thumbnailSrc": { "type": "string", "default": "./showcase/default_thumbnail.webp" },
         "tags": { "$ref": "#/definitions/tags" }
       },
-      "$ref": "#/definitions/baseProperties",
       "required": ["icon", "thumbnailSrc"]
     },
 
@@ -87,16 +94,21 @@
         }
       ]
     },
+    "version": {
+      "type": "string"
+    },
 
     "embedShowcase": {
       "properties": {
         "src": { "type": "string" }
-      }
+      },
+      "required": ["src"]
     },
     "imageShowcase": {
       "properties": {
         "imageSrc": { "type": "string" }
-      }
+      },
+      "required": ["imageSrc"]
     },
     "modelShowcase": {
       "properties": {
@@ -123,8 +135,9 @@
     },
     "groupedShowcase": {
       "properties": {
-        "children": { "type": "array", "items": { "$ref": "#/definitions/showcase" } }
-      }
+        "children": { "type": "array", "minItems": 2, "items": { "$ref": "#/definitions/baseProperties" } }
+      },
+      "required": ["children"]
     },
 
     "flags": {

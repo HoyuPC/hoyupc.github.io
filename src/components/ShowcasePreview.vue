@@ -36,21 +36,26 @@ function onClick(showcase: BaseShowcase, childIndex = -1) {
     <div class="container" @click="onClick(showcase)">
       <img alt="" :src="showcase.metadata.thumbnailSrc" fetchpriority="low" loading="lazy" />
 
-      <!-- Type -->
+      <!-- Type (top-left) -->
       <span id="type" class="overlay material-symbols-outlined">{{
         utils.getMaterialIcon(showcase.metadata.icon)
       }}</span>
 
-      <!-- Flags -->
+      <!-- Flags (top-right) -->
       <div v-if="showcase.metadata.flags.length > 0" id="flags" class="overlay">
         <span v-for="flag in showcase.metadata.flags" class="material-symbols-outlined">{{
           utils.getIconForFlag(flag)
         }}</span>
       </div>
 
-      <!-- Tags -->
+      <!-- Tags (bottom-left) -->
       <div v-if="showcase.metadata.tags.length > 0" id="tags" class="overlay">
         <span v-for="tag in showcase.metadata.tags"># {{ utils.getTagDisplayName(tag) }}</span>
+      </div>
+
+      <!-- Version (bottom-right) -->
+      <div v-if="showcase.metadata.version" id="version" class="overlay">
+        <span>v{{ showcase.metadata.version }}</span>
       </div>
     </div>
   </div>
@@ -59,10 +64,11 @@ function onClick(showcase: BaseShowcase, childIndex = -1) {
     <p class="parent-name">{{ showcase.metadata.name }}</p>
     <div class="child hover-effects element-border" v-for="(child, i) in showcase.children" @click="onClick(child, i)">
       <p>{{ child.metadata.name }}</p>
-      <div v-if="child.metadata.flags.length > 0" id="child-flags">
+      <div v-if="child.metadata.flags.length > 0 || child.metadata.version" id="child-flags">
         <span v-for="flag in child.metadata.flags" class="material-symbols-outlined">{{
           utils.getIconForFlag(flag)
         }}</span>
+        <span v-if="child.metadata.version">v{{ child.metadata.version }}</span>
       </div>
     </div>
     <button @click="groupedPopup!.close()">閉じる</button>
@@ -94,6 +100,7 @@ img {
 
 .overlay {
   pointer-events: none;
+  border-radius: 4px;
 }
 
 span {
@@ -127,6 +134,14 @@ span {
   font-size: 0.55em;
 }
 
+#version {
+  position: absolute;
+  right: 8px;
+  bottom: 16px;
+
+  font-size: 0.55em;
+}
+
 dialog {
   min-width: min(300px, 80vw);
 }
@@ -145,6 +160,10 @@ dialog {
   p {
     flex-grow: 1;
   }
+}
+
+#child-flags {
+  margin-left: 8px;
 }
 
 #child-flags span {

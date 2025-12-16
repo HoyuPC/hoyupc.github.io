@@ -12,13 +12,15 @@
     "type": "link",
     "icon": "game",
     "flags": ["external"],
+    "thumbnailSrc": "./showcase/default_thumbnail.webp",
     "href": "https://tr100000.github.io/boring-number-game"
   },
   {
     "name": "素数ホッケー",
     "type": "grouped",
-    "thumbnailSrc": "./showcase/games/prime_hockey.jpg",
+    "icon": "game",
     "flags": ["keyboard_required"],
+    "thumbnailSrc": "./showcase/games/prime_hockey.jpg",
     "children": [
       {
         "name": "２人でプレイ",
@@ -36,9 +38,9 @@
     "name": "ケミプラ",
     "type": "embed",
     "icon": "game",
-    "thumbnailSrc": "./showcase/festival_2025/chemical_platformer.webp",
     "flags": ["keyboard_required"],
     "tags": ["festival_2025"],
+    "thumbnailSrc": "./showcase/festival_2025/chemical_platformer.webp",
     "src": "./showcase/festival_2025/chemical_platformer.html"
   }
 ]
