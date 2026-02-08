@@ -8,11 +8,12 @@ import ScratchShowcase from './ScratchShowcase';
 import ShowcaseMetadata from './ShowcaseMetadata';
 
 let loadedShowcases: BaseShowcase[] = [];
+let showcaseMap = new Map<string, BaseShowcase>();
 
-export function getShowcases(): Promise<BaseShowcase[]> {
+export function getShowcases(): Promise<{ list: BaseShowcase[]; map: Map<string, BaseShowcase> }> {
   return new Promise((resolve) => {
     if (loadedShowcases.length > 0) {
-      resolve(loadedShowcases);
+      resolve({ list: loadedShowcases, map: showcaseMap });
     }
 
     fetch('./showcase/showcase.json').then((response) =>
@@ -21,7 +22,7 @@ export function getShowcases(): Promise<BaseShowcase[]> {
         let outputArray: BaseShowcase[] = [];
         jsonArray.forEach((obj) => tryParseShowcase(obj, (s) => outputArray.push(s)));
         loadedShowcases = outputArray;
-        resolve(outputArray);
+        resolve({ list: outputArray, map: showcaseMap });
       }),
     );
   });
@@ -30,10 +31,15 @@ export function getShowcases(): Promise<BaseShowcase[]> {
 function tryParseShowcase(showcaseObj: any, consume: (showcase: BaseShowcase) => void) {
   try {
     const showcase: BaseShowcase | undefined = parseShowcase(showcaseObj);
-    if (showcase !== undefined) {
+    if (showcase) {
+      if (showcase instanceof GroupedShowcase) {
+        showcase.children.forEach((child) => showcaseMap.set(child.metadata.id, child));
+      } else {
+        showcaseMap.set(showcase.metadata.id, showcase);
+      }
       consume(showcase);
     } else {
-      console.warn('parseShowcase returned undefined');
+      console.warn('Failed to parse showcase');
     }
   } catch (e: any) {
     console.error(e);
@@ -82,10 +88,11 @@ function parseShowcase(showcaseObj: any, isChild: boolean = false): BaseShowcase
 
 function parseMetadata(showcaseObj: any): ShowcaseMetadata {
   const name: string = showcaseObj['name'] ?? '無名の作品';
+  const id: string = showcaseObj['id'] ?? '';
   const icon: string = showcaseObj['icon'] ?? 'media';
   const flags: string[] = showcaseObj['flags'] ?? [];
   const tags: string[] = showcaseObj['tags'] ?? [];
   const version: string | undefined = showcaseObj.version;
   const thumbnailSrc: string = showcaseObj['thumbnailSrc'] ?? './showcase/default_thumbnail.webp';
-  return new ShowcaseMetadata(name, icon, flags, tags, version, thumbnailSrc);
+  return new ShowcaseMetadata(name, id, icon, flags, tags, version, thumbnailSrc);
 }

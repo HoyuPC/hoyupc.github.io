@@ -18,6 +18,8 @@ namespace utils {
         return 'open_in_new';
       case 'keyboard_required':
         return 'keyboard';
+      case 'mouse_required':
+        return 'mouse';
 
       default:
         return flag;

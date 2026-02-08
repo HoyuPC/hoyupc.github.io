@@ -6,7 +6,7 @@ export default class EmbedShowcase extends BaseShowcase {
     public src: string,
     metadata: ShowcaseMetadata,
   ) {
-    super('image', metadata);
+    super('embed', metadata);
   }
 
   public getComponent() {

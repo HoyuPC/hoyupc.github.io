@@ -7,7 +7,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const props = defineProps<{
-  index: number;
+  id: string;
   showcase: BaseShowcase;
 }>();
 
@@ -15,17 +15,13 @@ const groupedPopup = ref<HTMLDialogElement>();
 
 const router = useRouter();
 
-function onClick(showcase: BaseShowcase, childIndex = -1) {
+function onClick(showcase: BaseShowcase) {
   if (showcase instanceof LinkShowcase) {
     window.open(showcase.href, '_blank')?.focus();
   } else if (showcase instanceof GroupedShowcase) {
     groupedPopup.value!.showModal();
   } else {
-    if (childIndex < 0) {
-      router.push(`/showcase/${props.index.valueOf()}`);
-    } else {
-      router.push(`/showcase/${props.index}/${childIndex}`);
-    }
+    router.push(`/showcase/${showcase.metadata.id}`);
   }
 }
 </script>
@@ -62,7 +58,7 @@ function onClick(showcase: BaseShowcase, childIndex = -1) {
 
   <dialog ref="groupedPopup" class="element-border" v-if="showcase instanceof GroupedShowcase">
     <p class="parent-name">{{ showcase.metadata.name }}</p>
-    <div class="child hover-effects element-border" v-for="(child, i) in showcase.children" @click="onClick(child, i)">
+    <div class="child hover-effects element-border" v-for="child in showcase.children" @click="onClick(child)">
       <p>{{ child.metadata.name }}</p>
       <div v-if="child.metadata.flags.length > 0 || child.metadata.version" id="child-flags">
         <span v-for="flag in child.metadata.flags" class="material-symbols-outlined">{{
@@ -71,7 +67,7 @@ function onClick(showcase: BaseShowcase, childIndex = -1) {
         <span v-if="child.metadata.version">v{{ child.metadata.version }}</span>
       </div>
     </div>
-    <button @click="groupedPopup!.close()">閉じる</button>
+    <button class="element-border grouped-close" @click="groupedPopup!.close()">閉じる</button>
   </dialog>
 </template>
 
@@ -169,5 +165,9 @@ dialog {
 #child-flags span {
   background-color: rgba(240, 240, 240, 0.75);
   box-shadow: 0 0 2px rgba(255, 255, 255, 0.75);
+}
+
+.grouped-close {
+  margin: 0 !important;
 }
 </style>

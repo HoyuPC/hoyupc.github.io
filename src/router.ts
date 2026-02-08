@@ -28,11 +28,7 @@ const router = createRouter({
       ],
     },
     {
-      path: '/showcase/:index',
-      component: ShowcaseView,
-    },
-    {
-      path: '/showcase/:index/:childIndex',
+      path: '/showcase/:id',
       component: ShowcaseView,
     },
     {

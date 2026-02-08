@@ -1,6 +1,7 @@
 export default class ShowcaseMetadata {
   constructor(
     public name: string,
+    public id: string,
     public icon: string,
     public flags: string[],
     public tags: string[],

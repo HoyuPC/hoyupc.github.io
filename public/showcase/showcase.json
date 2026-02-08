@@ -1,6 +1,7 @@
 [
   {
     "name": "銀河鉄道",
+    "id": "galaxy_railway",
     "type": "model",
     "icon": "model",
     "thumbnailSrc": "./showcase/models/train.png",
@@ -9,6 +10,7 @@
   },
   {
     "name": "素因数分解ゲーム",
+    "id": "素因数分解ゲーム",
     "type": "link",
     "icon": "game",
     "flags": ["external"],
@@ -20,27 +22,40 @@
     "type": "grouped",
     "icon": "game",
     "flags": ["keyboard_required"],
-    "thumbnailSrc": "./showcase/games/prime_hockey.jpg",
+    "thumbnailSrc": "./showcase/games/prime_hockey/thumbnail.jpg",
     "children": [
       {
         "name": "２人でプレイ",
+        "id": "prime_hockey",
         "type": "embed",
-        "src": "./showcase/games/prime_hockey.html"
+        "src": "./showcase/games/prime_hockey/prime_hockey.html"
       },
       {
         "name": "１人でプレイ",
+        "id": "prime_hockey_single",
         "type": "embed",
-        "src": "./showcase/games/prime_hockey_single.html"
+        "src": "./showcase/games/prime_hockey/prime_hockey_single.html"
       }
     ]
   },
   {
     "name": "ケミプラ",
+    "id": "chemical_platformer",
     "type": "embed",
     "icon": "game",
     "flags": ["keyboard_required"],
     "tags": ["festival_2025"],
     "thumbnailSrc": "./showcase/festival_2025/chemical_platformer.webp",
     "src": "./showcase/festival_2025/chemical_platformer.html"
+  },
+  {
+    "name": "論理回路パズルゲーム",
+    "id": "circuit_puzzle_game",
+    "type": "link",
+    "icon": "game",
+    "flags": ["external"],
+    "thumbnailSrc": "./showcase/default_thumbnail.webp",
+    "href": "/showcase/games/circuit_puzzle_game/index.html",
+    "version": "0.1"
   }
 ]

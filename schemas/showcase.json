@@ -7,60 +7,60 @@
     "showcase": {
       "allOf": [
         { "$ref": "#/definitions/baseProperties" },
-        { "$ref": "#/definitions/extraProperties" },
-        {
-          "if": {
-            "properties": { "type": { "const": "embed" } }
-          },
-          "then": {
-            "$ref": "#/definitions/embedShowcase"
-          }
-        },
-        {
-          "if": {
-            "properties": { "type": { "const": "image" } }
-          },
-          "then": {
-            "$ref": "#/definitions/imageShowcase"
-          }
-        },
-        {
-          "if": {
-            "properties": { "type": { "const": "model" } }
-          },
-          "then": {
-            "$ref": "#/definitions/modelShowcase"
-          }
-        },
-        {
-          "if": {
-            "properties": { "type": { "const": "scratch" } }
-          },
-          "then": {
-            "$ref": "#/definitions/scratchShowcase"
-          }
-        },
-        {
-          "if": {
-            "properties": { "type": { "const": "link" } }
-          },
-          "then": {
-            "$ref": "#/definitions/linkShowcase"
-          }
-        },
         {
           "if": {
             "properties": { "type": { "const": "grouped" } }
           },
           "then": {
             "$ref": "#/definitions/groupedShowcase"
+          },
+          "else": {
+            "allOf": [
+              { "$ref": "#/definitions/extraProperties" },
+              {
+                "if": {
+                  "properties": { "type": { "const": "embed" } }
+                },
+                "then": {
+                  "$ref": "#/definitions/embedShowcase"
+                }
+              },
+              {
+                "if": {
+                  "properties": { "type": { "const": "image" } }
+                },
+                "then": {
+                  "$ref": "#/definitions/imageShowcase"
+                }
+              },
+              {
+                "if": {
+                  "properties": { "type": { "const": "model" } }
+                },
+                "then": {
+                  "$ref": "#/definitions/modelShowcase"
+                }
+              },
+              {
+                "if": {
+                  "properties": { "type": { "const": "scratch" } }
+                },
+                "then": {
+                  "$ref": "#/definitions/scratchShowcase"
+                }
+              },
+              {
+                "if": {
+                  "properties": { "type": { "const": "link" } }
+                },
+                "then": {
+                  "$ref": "#/definitions/linkShowcase"
+                }
+              }
+            ]
           }
         }
-      ],
-      "if": {
-        "not": { "properties": { "type": { "const": "grouped" } } },
-        "then": { "$ref": "#/definitions/extraProperties" }
-      }
+      ]
     },
     "baseProperties": {
       "properties": {
@@ -74,11 +74,12 @@
     "extraProperties": {
       "type": "object",
       "properties": {
+        "id": { "type": "string" },
         "icon": { "$ref": "#/definitions/iconEnum" },
         "thumbnailSrc": { "type": "string", "default": "./showcase/default_thumbnail.webp" },
         "tags": { "$ref": "#/definitions/tags" }
       },
-      "required": ["icon", "thumbnailSrc"]
+      "required": ["id", "icon", "thumbnailSrc"]
     },
 
     "typeEnum": {
@@ -135,7 +136,21 @@
     },
     "groupedShowcase": {
       "properties": {
-        "children": { "type": "array", "minItems": 2, "items": { "$ref": "#/definitions/baseProperties" } }
+        "children": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "allOf": [
+              { "$ref": "#/definitions/baseProperties" },
+              {
+                "properties": {
+                  "id": { "type": "string" }
+                },
+                "required": ["id"]
+              }
+            ]
+          }
+        }
       },
       "required": ["children"]
     },
@@ -143,7 +158,7 @@
     "flags": {
       "type": "array",
       "items": {
-        "enum": ["external", "keyboard_required"]
+        "enum": ["external", "keyboard_required", "mouse_required"]
       }
     },
 

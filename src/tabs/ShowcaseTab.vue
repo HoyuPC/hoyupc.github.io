@@ -5,18 +5,12 @@ import { getShowcases } from '@/showcase/loader';
 import { ref } from 'vue';
 
 const showcaseList = ref<BaseShowcase[]>([]);
-getShowcases().then((list) => (showcaseList.value = list.slice().reverse()));
+getShowcases().then((loaded) => (showcaseList.value = loaded.list.slice().reverse()));
 </script>
 
 <template>
-  <p class="info">部員が公開している作品等をここに掲載しております。</p>
-
   <div class="showcase-container">
-    <ShowcasePreview
-      v-for="(showcase, index) in showcaseList"
-      :index="showcaseList.length - index - 1"
-      :showcase="showcase"
-    />
+    <ShowcasePreview v-for="showcase in showcaseList" :id="showcase.metadata.id" :showcase="showcase" />
   </div>
 </template>
 

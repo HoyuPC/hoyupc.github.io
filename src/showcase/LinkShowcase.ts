@@ -10,6 +10,6 @@ export default class LinkShowcase extends BaseShowcase {
   }
 
   public getComponent() {
-    return () => undefined;
+    return () => import('./LinkShowcaseComp.vue');
   }
 }

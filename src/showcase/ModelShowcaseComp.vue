@@ -43,7 +43,7 @@ onMounted(() => {
       (glft) => scene.add(glft.scene),
       undefined,
       (error) => {
-        console.log(error);
+        console.error(error);
         load('./showcase/default_model.glb');
       },
     );

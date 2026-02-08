@@ -9,21 +9,13 @@ import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 
-const showcaseList = ref<BaseShowcase[]>([]);
-getShowcases().then((list) => (showcaseList.value = list));
+const showcaseList = ref<Map<string, BaseShowcase>>();
+getShowcases().then((loaded) => (showcaseList.value = loaded.map));
 
-const parentShowcaseIndex = computed(() => Number.parseInt(route.params.index as string));
-const childShowcaseIndex = computed(() => Number.parseInt((route.params.childIndex as string) ?? '-1'));
+const showcaseId = computed(() => route.params.id as string);
 
-const showcaseIndex = computed(() => `${parentShowcaseIndex}/${childShowcaseIndex}`);
-
-const parent = computed(() => showcaseList.value[parentShowcaseIndex.value]);
 const current = computed(() => {
-  if (childShowcaseIndex.value < 0) {
-    return parent.value;
-  } else {
-    return (parent.value as GroupedShowcase).children[childShowcaseIndex.value];
-  }
+  return showcaseList.value?.get(showcaseId.value);
 });
 
 function onKeyDown(e: KeyboardEvent) {
@@ -37,9 +29,9 @@ onUnmounted(() => document.removeEventListener('keydown', onKeyDown));
 </script>
 
 <template>
-  <div class="container" v-if="showcaseList.length >= parentShowcaseIndex - 1" :key="showcaseIndex">
+  <div class="container" v-if="current ?? NotFoundShowcase" :key="showcaseId">
     <nav>
-      <h1>{{ (parent ?? NotFoundShowcase).metadata.name }}</h1>
+      <h1>{{ (current ?? NotFoundShowcase).metadata.name }}</h1>
       <button id="close-button"><span @click="router.back()" class="material-symbols-outlined"> close </span></button>
     </nav>
     <div class="showcase-view">
