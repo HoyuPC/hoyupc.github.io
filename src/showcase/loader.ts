@@ -89,10 +89,10 @@ function parseShowcase(showcaseObj: any, isChild: boolean = false): BaseShowcase
 function parseMetadata(showcaseObj: any): ShowcaseMetadata {
   const name: string = showcaseObj['name'] ?? '無名の作品';
   const id: string = showcaseObj['id'] ?? '';
-  const icon: string = showcaseObj['icon'] ?? 'media';
+  const category: string = showcaseObj['category'] ?? 'media';
   const flags: string[] = showcaseObj['flags'] ?? [];
   const tags: string[] = showcaseObj['tags'] ?? [];
   const version: string | undefined = showcaseObj.version;
   const thumbnailSrc: string = showcaseObj['thumbnailSrc'] ?? './showcase/default_thumbnail.webp';
-  return new ShowcaseMetadata(name, id, icon, flags, tags, version, thumbnailSrc);
+  return new ShowcaseMetadata(name, id, category, flags, tags, version, thumbnailSrc);
 }

@@ -3,7 +3,7 @@
     "name": "銀河鉄道",
     "id": "galaxy_railway",
     "type": "model",
-    "icon": "model",
+    "category": "model",
     "thumbnailSrc": "./showcase/models/train.png",
     "modelSrc": "./showcase/models/train.glb",
     "clearColor": "0x444444"
@@ -12,7 +12,7 @@
     "name": "素因数分解ゲーム",
     "id": "素因数分解ゲーム",
     "type": "link",
-    "icon": "game",
+    "category": "game",
     "flags": ["external"],
     "thumbnailSrc": "./showcase/default_thumbnail.webp",
     "href": "https://tr100000.github.io/boring-number-game"
@@ -20,7 +20,7 @@
   {
     "name": "素数ホッケー",
     "type": "grouped",
-    "icon": "game",
+    "category": "game",
     "flags": ["keyboard_required"],
     "thumbnailSrc": "./showcase/games/prime_hockey/thumbnail.jpg",
     "children": [
@@ -42,7 +42,7 @@
     "name": "ケミプラ",
     "id": "chemical_platformer",
     "type": "embed",
-    "icon": "game",
+    "category": "game",
     "flags": ["keyboard_required"],
     "tags": ["festival_2025"],
     "thumbnailSrc": "./showcase/festival_2025/chemical_platformer.webp",
@@ -52,10 +52,20 @@
     "name": "論理回路パズルゲーム",
     "id": "circuit_puzzle_game",
     "type": "link",
-    "icon": "game",
+    "category": "game",
     "flags": ["external"],
     "thumbnailSrc": "./showcase/default_thumbnail.webp",
     "href": "/showcase/games/circuit_puzzle_game/index.html",
-    "version": "0.1"
+    "version": "0.1.0"
+  },
+  {
+    "name": "日本史 並べ替え",
+    "id": "history_reordering",
+    "type": "link",
+    "category": "game",
+    "flags": ["external"],
+    "thumbnailSrc": "./showcase/default_thumbnail.webp",
+    "href": "/showcase/games/history_reordering/index.html",
+    "version": "0.1.0"
   }
 ]

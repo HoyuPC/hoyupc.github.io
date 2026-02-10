@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>歴史 並べ替え</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="text/javascript" src="script.js" defer></script>
+  </head>
+  <body>
+    <div id="start" hidden>
+      <div id="options">
+        <div>
+          <input type="checkbox" id="challengeModeToggle" />
+          <label for="challengeModeToggle">チャレンジモード</label>
+        </div>
+        <div>
+          <label for="questionCountInput">問題数</label>
+          <input
+            type="number"
+            id="questionCountInput"
+            min="1"
+            max="20"
+            value="5"
+          />
+        </div>
+        <div>
+          <span>範囲: </span>
+          <input type="number" id="yearRangeStartInput" />
+          <label for="yearRangeStartInput">年</label>
+          <span>から</span>
+          <input type="number" id="yearRangeEndInput" />
+          <label for="yearRangeEndInput">年</label>
+          <span>まで</span>
+        </div>
+      </div>
+      <button id="startButton">開始</button>
+    </div>
+    <div id="quiz" hidden>
+      <p id="progress"></p>
+      <p>下記の出来事を左から年号順に並べ</p>
+      <div id="container"></div>
+      <div id="fakeContainer"></div>
+      <button id="submitButton" class="quiz-button">回答する</button>
+      <button id="continueButton" class="quiz-button" hidden>次へ</button>
+    </div>
+    <div id="end" hidden>
+      <p id="challengeModeText">チャレンジモード</p>
+      <p><span id="correctCount"></span> 問正解</p>
+      <p>正答率: <span id="correctPercentage"></span></p>
+    </div>
+  </body>
+
+  <template id="quiz-element">
+    <div class="quiz-element">
+      <p class="text"></p>
+      <p class="year" hidden></p>
+    </div>
+  </template>
+</html>

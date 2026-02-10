@@ -34,7 +34,7 @@ function onClick(showcase: BaseShowcase) {
 
       <!-- Type (top-left) -->
       <span id="type" class="overlay material-symbols-outlined">{{
-        utils.getMaterialIcon(showcase.metadata.icon)
+        utils.getIconForCategory(showcase.metadata.category)
       }}</span>
 
       <!-- Flags (top-right) -->

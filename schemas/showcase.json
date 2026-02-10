@@ -75,17 +75,17 @@
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "icon": { "$ref": "#/definitions/iconEnum" },
+        "category": { "$ref": "#/definitions/categoryEnum" },
         "thumbnailSrc": { "type": "string", "default": "./showcase/default_thumbnail.webp" },
         "tags": { "$ref": "#/definitions/tags" }
       },
-      "required": ["id", "icon", "thumbnailSrc"]
+      "required": ["id", "category", "thumbnailSrc"]
     },
 
     "typeEnum": {
       "enum": ["embed", "image", "model", "scratch", "link", "grouped"]
     },
-    "iconEnum": {
+    "categoryEnum": {
       "anyOf": [
         {
           "enum": ["media", "model", "game"]

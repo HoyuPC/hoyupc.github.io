@@ -1,5 +1,5 @@
 namespace utils {
-  export function getMaterialIcon(icon: string) {
+  export function getIconForCategory(icon: string) {
     switch (icon) {
       case 'media':
         return 'image';
