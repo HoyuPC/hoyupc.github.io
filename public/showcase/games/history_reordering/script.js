@@ -21,9 +21,16 @@ const submitButton = document.getElementById("submitButton");
 /** @type {HTMLButtonElement} */
 const continueButton = document.getElementById("continueButton");
 
+const wrongAudio = new Audio("wrong.mp3");
+
+const yearRangeText = document.getElementById("yearRangeText");
+const yearRangeStartText = document.getElementById("yearRangeStartText");
+const yearRangeEndText = document.getElementById("yearRangeEndText");
 const challengeModeText = document.getElementById("challengeModeText");
 const correctCountText = document.getElementById("correctCount");
 const correctPercentageText = document.getElementById("correctPercentage");
+
+const loseAudio = new Audio("lose.mp3");
 
 /**
  * @typedef {{year: number, text: string}} HistoryEvent
@@ -104,11 +111,13 @@ const challengeModeHistoryEvents = [
 /** @type {HistoryEvent[]} */
 const allHistoryEvents = [...historyEvents, ...challengeModeHistoryEvents];
 
-function getEventPool(
-  challengeMode = false,
-  minYear = -Infinity,
-  maxYear = Infinity,
-) {
+/**
+ * @param {boolean} challengeMode
+ * @param {number} minYear
+ * @param {number} maxYear
+ * @returns
+ */
+function getEventPool(challengeMode, minYear, maxYear) {
   return (challengeMode ? allHistoryEvents : historyEvents).filter(
     (event) => event.year >= minYear && event.year <= maxYear,
   );
@@ -212,6 +221,7 @@ submitButton.addEventListener("click", () => checkAnswers(true));
 continueButton.addEventListener("click", () => nextQuestion());
 
 function nextQuestion() {
+  wrongAudio.pause();
   progress++;
   resetQuiz();
 
@@ -408,7 +418,13 @@ function checkAnswers(forReal) {
     continueButton.hidden = false;
     continueButton.disabled = false;
 
-    if (isCorrect) correctCount++;
+    if (isCorrect) {
+      correctCount++;
+    } else {
+      wrongAudio.currentTime = 0;
+      wrongAudio.play();
+    }
+
     quizEventElements.forEach((element) => {
       element.yearElement.hidden = false;
       element.yearElement.classList.add(isCorrect ? "correct" : "wrong");
@@ -422,7 +438,14 @@ function showResults() {
   quizDiv.hidden = true;
   endDiv.hidden = false;
 
+  yearRangeStartText.innerHTML = params.minYear;
+  yearRangeEndText.innerHTML = params.maxYear;
+
   challengeModeText.hidden = !params.challengeMode;
   correctCountText.innerHTML = `${correctCount} / ${params.count}`;
   correctPercentageText.innerHTML = `${Math.floor((correctCount / params.count) * 100)}%`;
+
+  if (correctCount == 0) {
+    loseAudio.play();
+  }
 }

@@ -66,6 +66,6 @@
     "flags": ["external"],
     "thumbnailSrc": "./showcase/default_thumbnail.webp",
     "href": "/showcase/games/history_reordering/index.html",
-    "version": "0.1.0"
+    "version": "0.1.1"
   }
 ]
