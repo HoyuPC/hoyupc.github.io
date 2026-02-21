@@ -58,7 +58,11 @@ function onClick(showcase: BaseShowcase) {
 
   <dialog ref="groupedPopup" class="element-border" v-if="showcase instanceof GroupedShowcase">
     <p class="parent-name">{{ showcase.metadata.name }}</p>
-    <div class="child hover-effects element-border" v-for="child in showcase.children" @click="onClick(child)">
+    <div
+      class="child hover-effects element-border"
+      v-for="child in showcase.children.filter((s) => !s.metadata.hidden)"
+      @click="onClick(child)"
+    >
       <p>{{ child.metadata.name }}</p>
       <div v-if="child.metadata.flags.length > 0 || child.metadata.version" id="child-flags">
         <span v-for="flag in child.metadata.flags" class="material-symbols-outlined">{{

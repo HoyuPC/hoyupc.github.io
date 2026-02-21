@@ -5,7 +5,13 @@ import { getShowcases } from '@/showcase/loader';
 import { ref } from 'vue';
 
 const showcaseList = ref<BaseShowcase[]>([]);
-getShowcases().then((loaded) => (showcaseList.value = loaded.list.slice().reverse()));
+getShowcases().then(
+  (loaded) =>
+    (showcaseList.value = loaded.list
+      .slice()
+      .reverse()
+      .filter((s) => !s.metadata.hidden)),
+);
 </script>
 
 <template>

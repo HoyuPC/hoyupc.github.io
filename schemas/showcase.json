@@ -17,6 +17,7 @@
           "else": {
             "allOf": [
               { "$ref": "#/definitions/extraProperties" },
+              { "$ref": "#/definitions/otherProperties" },
               {
                 "if": {
                   "properties": { "type": { "const": "embed" } }
@@ -74,12 +75,18 @@
     "extraProperties": {
       "type": "object",
       "properties": {
-        "id": { "type": "string" },
         "category": { "$ref": "#/definitions/categoryEnum" },
         "thumbnailSrc": { "type": "string", "default": "./showcase/default_thumbnail.webp" },
         "tags": { "$ref": "#/definitions/tags" }
       },
-      "required": ["id", "category", "thumbnailSrc"]
+      "required": ["category", "thumbnailSrc"]
+    },
+    "otherProperties": {
+      "properties": {
+        "id": { "type": "string" },
+        "hidden": { "const": true }
+      },
+      "required": ["id"]
     },
 
     "typeEnum": {
@@ -140,15 +147,7 @@
           "type": "array",
           "minItems": 2,
           "items": {
-            "allOf": [
-              { "$ref": "#/definitions/baseProperties" },
-              {
-                "properties": {
-                  "id": { "type": "string" }
-                },
-                "required": ["id"]
-              }
-            ]
+            "allOf": [{ "$ref": "#/definitions/baseProperties" }, { "$ref": "#/definitions/otherProperties" }]
           }
         }
       },
