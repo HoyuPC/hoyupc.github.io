@@ -10,7 +10,7 @@ getShowcases().then(
     (showcaseList.value = loaded.list
       .slice()
       .reverse()
-      .filter((s) => !s.metadata.hidden)),
+      .filter((s) => s.metadata.status !== 'hidden')),
 );
 </script>
 

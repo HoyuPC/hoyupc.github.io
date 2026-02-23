@@ -76,6 +76,6 @@
     "flags": ["mouse_required", "external"],
     "thumbnailSrc": "./showcase/default_thumbnail.webp",
     "href": "/showcase/games/drunk_shooting/index.html",
-    "hidden": true
+    "status": "hidden"
   }
 ]

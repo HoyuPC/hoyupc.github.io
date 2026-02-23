@@ -5,7 +5,7 @@ import ImageShowcase from './ImageShowcase';
 import LinkShowcase from './LinkShowcase';
 import ModelShowcase from './ModelShowcase';
 import ScratchShowcase from './ScratchShowcase';
-import ShowcaseMetadata from './ShowcaseMetadata';
+import ShowcaseMetadata, { type ShowcaseStatus } from './ShowcaseMetadata';
 
 let loadedShowcases: BaseShowcase[] = [];
 let showcaseMap = new Map<string, BaseShowcase>();
@@ -94,6 +94,6 @@ function parseMetadata(showcaseObj: any): ShowcaseMetadata {
   let tags: string[] = showcaseObj['tags'] ?? [];
   let version: string | undefined = showcaseObj.version;
   let thumbnailSrc: string = showcaseObj['thumbnailSrc'] ?? './showcase/default_thumbnail.webp';
-  let hidden: boolean = showcaseObj['hidden'] ?? false;
-  return new ShowcaseMetadata(name, id, category, flags, tags, version, thumbnailSrc, hidden);
+  let status: ShowcaseStatus = showcaseObj['status'] ?? 'normal';
+  return new ShowcaseMetadata(name, id, category, flags, tags, version, thumbnailSrc, status);
 }

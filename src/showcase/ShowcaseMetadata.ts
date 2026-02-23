@@ -7,6 +7,8 @@ export default class ShowcaseMetadata {
     public tags: string[],
     public version: string | undefined,
     public thumbnailSrc: string,
-    public hidden: boolean,
+    public status: ShowcaseStatus,
   ) {}
 }
+
+export type ShowcaseStatus = 'normal' | 'disabled' | 'hidden';

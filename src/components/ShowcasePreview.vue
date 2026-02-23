@@ -16,6 +16,8 @@ const groupedPopup = ref<HTMLDialogElement>();
 const router = useRouter();
 
 function onClick(showcase: BaseShowcase) {
+  if (showcase.metadata.status !== 'normal') return;
+
   if (showcase instanceof LinkShowcase) {
     window.open(showcase.href, '_blank')?.focus();
   } else if (showcase instanceof GroupedShowcase) {
@@ -29,7 +31,7 @@ function onClick(showcase: BaseShowcase) {
 <template>
   <div>
     <h3>{{ showcase.metadata.name }}</h3>
-    <div class="container" @click="onClick(showcase)">
+    <div class="container" :status="showcase.metadata.status" @click="onClick(showcase)">
       <img alt="" :src="showcase.metadata.thumbnailSrc" fetchpriority="low" loading="lazy" />
 
       <!-- Type (top-left) -->
@@ -60,7 +62,8 @@ function onClick(showcase: BaseShowcase) {
     <p class="parent-name">{{ showcase.metadata.name }}</p>
     <div
       class="child hover-effects element-border"
-      v-for="child in showcase.children.filter((s) => !s.metadata.hidden)"
+      :status="child.metadata.status"
+      v-for="child in showcase.children.filter((s) => s.metadata.status !== 'hidden')"
       @click="onClick(child)"
     >
       <p>{{ child.metadata.name }}</p>
@@ -173,5 +176,21 @@ dialog {
 
 .grouped-close {
   margin: 0 !important;
+}
+
+[status='disabled'] {
+  box-shadow: none;
+  cursor: not-allowed;
+  filter: grayscale(100%) brightness(0.75);
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  img {
+    box-shadow: none;
+    cursor: not-allowed;
+  }
 }
 </style>

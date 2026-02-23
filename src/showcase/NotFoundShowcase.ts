@@ -3,7 +3,10 @@ import ShowcaseMetadata from './ShowcaseMetadata';
 
 class NotFoundShowcase extends BaseShowcase {
   constructor() {
-    super('not_found', new ShowcaseMetadata('Error', '_error', '', [], [], undefined, './default_thumbnail.webp', true));
+    super(
+      'not_found',
+      new ShowcaseMetadata('Error', '_error', '', [], [], undefined, './default_thumbnail.webp', 'hidden'),
+    );
   }
 
   public getComponent() {
