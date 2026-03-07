@@ -6,6 +6,12 @@ html {
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+
+  --light-0: white;
+  --light-1: #f8f8f8;
+
+  --dark-0: black;
+  --dark-1: #323232;
 }
 
 * {
@@ -21,6 +27,11 @@ html {
   text-align: center;
 }
 
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 [hidden] {
   display: none !important;
 }
@@ -33,9 +44,81 @@ body {
   align-items: center;
 }
 
+input:not(.switch),
+button {
+  border: 1px solid var(--dark-1);
+  border-radius: 6px;
+  padding: 4px 6px;
+  background-color: var(--light-0);
+  transition: all 100ms ease-in-out;
+
+  &:hover:not(:disabled) {
+    border-color: var(--dark-1);
+    background-color: var(--light-1);
+  }
+
+  &:focus:not(:disabled),
+  &:focus-visible:not(:disabled) {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+}
+
+input:disabled,
+button:disabled {
+  border: 1px solid darkgray;
+  color: darkgray;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .flex {
   display: flex;
   gap: 4px;
+}
+
+label:has(.switch) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.switch {
+  --width: 0.8;
+  --height: 1.25em;
+
+  appearance: none;
+  display: inline-block;
+  height: var(--height);
+  width: calc(var(--height) * calc(1 + var(--width)));
+  border: none;
+  border-radius: 99em;
+  padding: 0;
+  transition: all 100ms ease-in-out;
+  background-color: #e5e5e5;
+
+  &::after {
+    content: "";
+    display: block;
+    aspect-ratio: 1;
+    background-color: white;
+    border: 1px solid #808080;
+    height: 100%;
+    border-radius: 50%;
+    transition: all 100ms ease-in-out;
+  }
+
+  &:checked {
+    background-color: #0088cc !important;
+  }
+
+  &:checked::after {
+    border-color: #0088cc;
+    transform: translateX(calc(var(--height) * var(--width)));
+  }
 }
 
 #options {
@@ -45,7 +128,7 @@ body {
 }
 
 #startButton {
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 #options > div {
@@ -68,9 +151,9 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: 8px;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 4px;
+  background-color: var(--light-0);
+  border: 1px solid var(--dark-1);
+  border-radius: 6px;
 
   .year {
     transform: translateY(8px);

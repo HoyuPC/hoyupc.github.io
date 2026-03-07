@@ -64,18 +64,8 @@
     "type": "link",
     "category": "game",
     "flags": ["external"],
-    "thumbnailSrc": "./showcase/default_thumbnail.webp",
+    "thumbnailSrc": "./showcase/games/history_reordering/thumbnail.jpg",
     "href": "/showcase/games/history_reordering/index.html",
-    "version": "0.1.1"
-  },
-  {
-    "name": "飲酒射撃",
-    "id": "drunk_shooting",
-    "type": "link",
-    "category": "game",
-    "flags": ["mouse_required", "external"],
-    "thumbnailSrc": "./showcase/default_thumbnail.webp",
-    "href": "/showcase/games/drunk_shooting/index.html",
-    "status": "hidden"
+    "version": "0.1.2"
   }
 ]

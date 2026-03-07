@@ -27,7 +27,7 @@ type RouteLinks = {
   </div>
 
   <RouterView v-slot="{ Component, route }">
-    <Transition :name="(route.meta.transition as string) || 'fade'" :duration="{ leave: 200, enter: 350 }">
+    <Transition :name="(route.meta.transition as string) || 'fade'" :duration="{ leave: 200, enter: 400 }">
       <main class="tab-container" :key="route.path">
         <div class="tab-view">
           <component :is="Component" />
@@ -137,7 +137,7 @@ nav {
   }
 
   p {
-    transition: transform 300ms ease-out;
+    transition: all 300ms ease-out;
   }
 
   &:focus-visible {

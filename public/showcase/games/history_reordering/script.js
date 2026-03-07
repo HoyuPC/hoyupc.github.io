@@ -68,7 +68,6 @@ const historyEvents = [
   { year: 1998, text: "長野オリンピックの開催" },
   { year: 1999, text: "自公連立政権の発足" },
   { year: 2002, text: "初の日朝首脳会談" },
-  { year: 2011, text: "LINEの運用開始" },
 ];
 
 /** @type {HistoryEvent{}} */
@@ -274,7 +273,7 @@ function selectHistoryEvent(pool, selectedEvents) {
 
   do {
     selectedEvent = pool[Math.floor(Math.random() * pool.length)];
-  } while (selectedEvents.some((other) => other.year == selectedEvent.year));
+  } while (selectedEvents.some((other) => other.year === selectedEvent.year));
 
   return selectedEvent;
 }
@@ -316,17 +315,11 @@ function createEventElements(selectedEvents) {
   fakeContainer.appendChild(fakeClone);
 
   for (let element of quizEventElements) {
-    element.root.addEventListener("pointerdown", (e) =>
-      onElementDragStart(e, element),
-    );
+    element.root.addEventListener("pointerdown", (e) => onElementDragStart(e, element));
   }
-  document.addEventListener("pointermove", (e) =>
-    onElementDragMove(e, currentDraggingElement),
-  );
+  document.addEventListener("pointermove", (e) => onElementDragMove(e, currentDraggingElement));
 
-  document.addEventListener("pointerup", (e) =>
-    onElementDragEnd(e, currentDraggingElement),
-  );
+  document.addEventListener("pointerup", (e) => onElementDragEnd(e, currentDraggingElement));
 }
 
 /**
@@ -425,10 +418,10 @@ function checkAnswers(forReal) {
       wrongAudio.play();
     }
 
-    quizEventElements.forEach((element) => {
+    for (let element of quizEventElements) {
       element.yearElement.hidden = false;
       element.yearElement.classList.add(isCorrect ? "correct" : "wrong");
-    });
+    }
   }
 
   return isCorrect;
@@ -445,7 +438,7 @@ function showResults() {
   correctCountText.innerHTML = `${correctCount} / ${params.count}`;
   correctPercentageText.innerHTML = `${Math.floor((correctCount / params.count) * 100)}%`;
 
-  if (correctCount == 0) {
+  if (correctCount === 0) {
     loseAudio.play();
   }
 }

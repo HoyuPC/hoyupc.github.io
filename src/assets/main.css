@@ -133,19 +133,19 @@ dialog {
 
 .slide-left-enter-active,
 .slide-right-enter-active {
-  transition-delay: 150ms;
+  transition-delay: 200ms;
 }
 
 .slide-left-enter-from,
 .slide-right-leave-to {
   opacity: 0;
-  transform: translateX(-1.5px);
+  transform: translateX(-2px);
 }
 
 .slide-right-enter-from,
 .slide-left-leave-to {
   opacity: 0;
-  transform: translateX(1.5px);
+  transform: translateX(2px);
 }
 
 @media screen and (max-width: 600px) {
