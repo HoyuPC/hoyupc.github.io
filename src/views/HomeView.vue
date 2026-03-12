@@ -46,15 +46,27 @@ type RouteLinks = {
 
 <style scoped lang="css">
 .title-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
+  box-shadow: 0 0 8px var(--color-2);
+}
+
+.title-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('/assets/background.webp');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  box-shadow: 0 0 8px var(--color-2);
+  z-index: -1;
+  filter: blur(1px);
 }
 
 .title {
@@ -80,6 +92,7 @@ type RouteLinks = {
 }
 
 .tab-container {
+  position: relative;
   min-width: 100vw;
   min-height: calc(100vh - 16px);
   display: flex;
@@ -106,19 +119,15 @@ nav {
 .tablink {
   border: 2px solid var(--color-3);
   border-radius: 6px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom: none;
   cursor: pointer;
-  padding: 8px;
-  padding-bottom: 6px;
-  font-size: 1.5em;
   color: inherit;
   background-color: var(--color-6);
   text-decoration: none;
-  transition: all 100ms ease-out;
-  filter: opacity(90%);
-
+  font-size: 1.5em;
+  padding: 8px;
+  transform: translateY(-4px);
+  transition: all 400ms ease-out;
+  filter: opacity(75%);
   animation: fadeIn 1.5s;
   animation-fill-mode: both;
 
@@ -128,16 +137,10 @@ nav {
 
   &.active {
     border-color: var(--color-1);
-    background-color: var(--color-4);
     filter: opacity(100%);
-
-    p {
-      transform: translateY(2px);
-    }
-  }
-
-  p {
-    transition: all 300ms ease-out;
+    transform: translateY(2px);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   &:focus-visible {
