@@ -27,9 +27,16 @@ namespace utils {
   }
 
   export function getTagDisplayName(tag: string): string {
+    if (tag.startsWith('festival_')) {
+      let year = Number.parseInt(tag.substring(9), 10);
+      if (Number.isInteger(year)) {
+        return '虹色祭' + year + '年';
+      }
+    }
+
     switch (tag) {
-      case 'festival_2025':
-        return '虹色祭2025';
+      case 'math_museum':
+        return '数学美術館';
 
       default:
         return tag;

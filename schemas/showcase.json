@@ -68,6 +68,7 @@
         "name": { "type": "string", "default": "無名の作品" },
         "type": { "$ref": "#/definitions/typeEnum" },
         "flags": { "$ref": "#/definitions/flags" },
+        "tags": { "$ref": "#/definitions/tags" },
         "version": { "$ref": "#/definitions/version" },
         "status": { "enum": ["normal", "disabled", "hidden"] }
       },
@@ -77,8 +78,7 @@
       "type": "object",
       "properties": {
         "category": { "$ref": "#/definitions/categoryEnum" },
-        "thumbnailSrc": { "type": "string", "default": "./showcase/default_thumbnail.webp" },
-        "tags": { "$ref": "#/definitions/tags" }
+        "thumbnailSrc": { "type": "string", "default": "./showcase/default_thumbnail.webp" }
       },
       "required": ["category", "thumbnailSrc"]
     },

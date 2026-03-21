@@ -21,6 +21,7 @@
     "type": "grouped",
     "category": "game",
     "flags": ["keyboard_required"],
+    "tags": ["festival_2025", "math_museum"],
     "thumbnailSrc": "./showcase/games/prime_hockey/thumbnail.jpg",
     "children": [
       {
@@ -52,7 +53,7 @@
     "id": "circuit_puzzle_game",
     "type": "link",
     "category": "game",
-    "flags": ["external"],
+    "flags": ["mouse_required", "external"],
     "href": "/showcase/games/circuit_puzzle_game/index.html",
     "version": "0.1.0"
   },
@@ -62,7 +63,7 @@
     "type": "link",
     "category": "game",
     "flags": ["external"],
-    "thumbnailSrc": "./showcase/games/history_reordering/thumbnail.jpg",
+    "thumbnailSrc": "./showcase/games/history_reordering/thumbnail.webp",
     "href": "/showcase/games/history_reordering/index.html",
     "version": "0.1.2"
   },
@@ -71,7 +72,9 @@
     "id": "shooting_game",
     "type": "link",
     "category": "game",
-    "flags": ["external"],
-    "href": "/showcase/games/shooting_game/Shooting.html"
+    "flags": ["keyboard_required", "external"],
+    "thumbnailSrc": "./showcase/games/shooting_game/thumbnail.webp",
+    "href": "/showcase/games/shooting_game/Shooting.html",
+    "version": "0.0.1-alpha.1"
   }
 ]

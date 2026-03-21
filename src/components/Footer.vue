@@ -4,7 +4,7 @@
       <a target="_blank" href="https://github.com/3036-pcc">
         <img src="/social/github_white.svg" alt="GitHub" />
       </a>
-      <a target="_blank" href="https://www.instagram.com/hoyu_pc">
+      <a target="_blank" href="https://www.instagram.com/hoyu_pc" hidden>
         <img src="/social/instagram_white.svg" alt="Instagram" />
       </a>
     </div>

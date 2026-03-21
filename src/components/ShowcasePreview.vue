@@ -112,8 +112,8 @@ span {
   user-select: none;
   pointer-events: none;
   font-size: 1.75em;
-  background-color: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 0 2px rgba(255, 255, 255, 0.75);
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.85);
   border-radius: 4px;
 }
 
