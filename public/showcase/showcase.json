@@ -14,7 +14,6 @@
     "type": "link",
     "category": "game",
     "flags": ["external"],
-    "thumbnailSrc": "./showcase/default_thumbnail.webp",
     "href": "https://tr100000.github.io/boring-number-game"
   },
   {
@@ -54,7 +53,6 @@
     "type": "link",
     "category": "game",
     "flags": ["external"],
-    "thumbnailSrc": "./showcase/default_thumbnail.webp",
     "href": "/showcase/games/circuit_puzzle_game/index.html",
     "version": "0.1.0"
   },
@@ -67,5 +65,13 @@
     "thumbnailSrc": "./showcase/games/history_reordering/thumbnail.jpg",
     "href": "/showcase/games/history_reordering/index.html",
     "version": "0.1.2"
+  },
+  {
+    "name": "Shooting Game",
+    "id": "shooting_game",
+    "type": "link",
+    "category": "game",
+    "flags": ["external"],
+    "href": "/showcase/games/shooting_game/Shooting.html"
   }
 ]
