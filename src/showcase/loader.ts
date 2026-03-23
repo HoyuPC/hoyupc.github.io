@@ -1,4 +1,4 @@
-import type BaseShowcase from './BaseShowcase';
+import type AbstractShowcase from './AbstractShowcase';
 import EmbedShowcase from './EmbedShowcase';
 import GroupedShowcase from './GroupedShowcase';
 import ImageShowcase from './ImageShowcase';
@@ -7,19 +7,19 @@ import ModelShowcase from './ModelShowcase';
 import ScratchShowcase from './ScratchShowcase';
 import ShowcaseMetadata, { type ShowcaseStatus } from './ShowcaseMetadata';
 
-let loadedShowcases: BaseShowcase[] = [];
-let showcaseMap = new Map<string, BaseShowcase>();
+let loadedShowcases: AbstractShowcase[] = [];
+let showcaseMap = new Map<string, AbstractShowcase>();
 
-export function getShowcases(): Promise<{ list: BaseShowcase[]; map: Map<string, BaseShowcase> }> {
+export function getShowcases(): Promise<{ list: AbstractShowcase[]; map: Map<string, AbstractShowcase> }> {
   return new Promise((resolve) => {
     if (loadedShowcases.length > 0) {
       resolve({ list: loadedShowcases, map: showcaseMap });
     }
 
-    fetch('./showcase/showcase.json').then((response) =>
+    fetch('./showcase.json').then((response) =>
       response.text().then((text) => {
         const jsonArray: any[] = JSON.parse(text);
-        let outputArray: BaseShowcase[] = [];
+        let outputArray: AbstractShowcase[] = [];
         jsonArray.forEach((obj) => tryParseShowcase(obj, (s) => outputArray.push(s)));
         loadedShowcases = outputArray;
         resolve({ list: outputArray, map: showcaseMap });
@@ -28,9 +28,9 @@ export function getShowcases(): Promise<{ list: BaseShowcase[]; map: Map<string,
   });
 }
 
-function tryParseShowcase(showcaseObj: any, consume: (showcase: BaseShowcase) => void) {
+function tryParseShowcase(showcaseObj: any, consume: (showcase: AbstractShowcase) => void) {
   try {
-    const showcase: BaseShowcase | undefined = parseShowcase(showcaseObj);
+    const showcase: AbstractShowcase | undefined = parseShowcase(showcaseObj);
     if (showcase) {
       if (showcase instanceof GroupedShowcase) {
         showcase.children.forEach((child) => showcaseMap.set(child.metadata.id, child));
@@ -46,7 +46,7 @@ function tryParseShowcase(showcaseObj: any, consume: (showcase: BaseShowcase) =>
   }
 }
 
-function parseShowcase(showcaseObj: any, isChild: boolean = false): BaseShowcase | undefined {
+function parseShowcase(showcaseObj: any, isChild: boolean = false): AbstractShowcase | undefined {
   const type: string = showcaseObj['type'];
   const metadata = parseMetadata(showcaseObj);
   switch (type) {
@@ -77,9 +77,11 @@ function parseShowcase(showcaseObj: any, isChild: boolean = false): BaseShowcase
         throw new TypeError('Nested showcase not allowed');
       }
       const children: any[] = showcaseObj['children'];
-      const parsedChildren: BaseShowcase[] = [];
+      const parsedChildren: AbstractShowcase[] = [];
       children.forEach((c) => tryParseShowcase(c, (s) => parsedChildren.push(s)));
-      return new GroupedShowcase(parsedChildren, metadata);
+      let parent = new GroupedShowcase(parsedChildren, metadata);
+      parsedChildren.forEach((c) => (c.metadata.parent = parent));
+      return parent;
     }
     default:
       throw new TypeError(`Invalid showcase type ${type}`);
@@ -95,5 +97,5 @@ function parseMetadata(showcaseObj: any): ShowcaseMetadata {
   let version: string | undefined = showcaseObj.version;
   let thumbnailSrc: string = showcaseObj['thumbnailSrc'] ?? './showcase/default_thumbnail.webp';
   let status: ShowcaseStatus = showcaseObj['status'] ?? 'normal';
-  return new ShowcaseMetadata(name, id, category, flags, tags, version, thumbnailSrc, status);
+  return new ShowcaseMetadata(name, id, category, flags, tags, version, thumbnailSrc, status, undefined);
 }

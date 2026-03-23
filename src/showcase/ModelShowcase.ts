@@ -1,7 +1,7 @@
-import BaseShowcase from './BaseShowcase';
+import AbstractShowcase from './AbstractShowcase';
 import type ShowcaseMetadata from './ShowcaseMetadata';
 
-export default class ModelShowcase extends BaseShowcase {
+export default class ModelShowcase extends AbstractShowcase {
   constructor(
     public modelSrc: string,
     public clearColor: number,

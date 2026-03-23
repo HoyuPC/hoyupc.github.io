@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import ShowcasePreview from '@/components/ShowcasePreview.vue';
-import type BaseShowcase from '@/showcase/BaseShowcase';
+import type AbstractShowcase from '@/showcase/AbstractShowcase';
 import { getShowcases } from '@/showcase/loader';
 import { ref } from 'vue';
 
-const showcaseList = ref<BaseShowcase[]>([]);
+const showcaseList = ref<AbstractShowcase[]>([]);
 getShowcases().then(
   (loaded) =>
     (showcaseList.value = loaded.list

@@ -15,6 +15,12 @@
   background-color: var(--color-6);
 }
 
+:root,
+body,
+html {
+  overflow-x: hidden;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -72,6 +78,41 @@ button,
   &:hover:not([status='disabled']) {
     background-color: var(--color-5);
     border-color: var(--color-1);
+  }
+}
+
+.info-box {
+  display: flex;
+  flex-direction: column;
+  margin: 16px 0;
+  padding: 16px;
+  text-align: left;
+  font-size: 1.4rem;
+  border: 2px solid;
+  border-radius: 8px;
+  background-color: rgba(var(--box-color), 0.4);
+  border-color: rgba(var(--box-color), 1);
+
+  p {
+    font-size: 1.4rem;
+    text-align: left;
+  }
+
+  &::before {
+    content: var(--label);
+    margin-left: 8px;
+    line-height: 32px;
+    font-weight: 500;
+  }
+
+  &.warn {
+    --label: '注意';
+    --box-color: 255, 204, 0;
+  }
+
+  &.error {
+    --label: 'エラーが発生しました';
+    --box-color: 255, 0, 0;
   }
 }
 
@@ -152,6 +193,11 @@ dialog {
 @media screen and (max-width: 600px) {
   p {
     font-size: 1.25em;
+  }
+
+  .info-box,
+  .info-box p {
+    font-size: 1.15em;
   }
 }
 

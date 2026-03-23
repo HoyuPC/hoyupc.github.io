@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "highlightDays": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/day" },
+      "default": ["Mon", "Thu"]
+    },
+    "months": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "month": { "$ref": "#/definitions/month" },
+          "events": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/event" }
+          },
+          "schedule": {
+            "$ref": "#/definitions/schedule"
+          }
+        },
+        "required": ["month"]
+      }
+    }
+  },
+  "required": ["months"],
+  "definitions": {
+    "day": {
+      "enum": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    },
+    "month": {
+      "type": "array",
+      "items": [
+        { "type": "number", "minimum": 1970 },
+        { "type": "number", "minimum": 1, "maximum": 12 }
+      ],
+      "additionalItems": false,
+      "default": [2025, 4]
+    },
+    "event": {
+      "type": "object",
+      "properties": {
+        "date": { "type": "number", "minimum": 1, "maximum": 31, "default": 1 },
+        "type": { "enum": ["schoolEvent", "schoolExam", "holiday"], "default": "holiday" },
+        "text": { "type": "string", "minLength": 1 }
+      },
+      "required": ["date", "text"]
+    },
+    "schedule": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^(([1-2]\\d)|(3[0-1])|[1-9])$"
+      },
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "boolean" },
+          {
+            "type": "array",
+            "items": [{ "type": "boolean" }, { "type": "string" }],
+            "additionalItems": false
+          }
+        ],
+        "default": [false, "あいうえお"]
+      }
+    }
+  }
+}

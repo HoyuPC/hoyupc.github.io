@@ -1,9 +1,9 @@
-import BaseShowcase from './BaseShowcase';
+import AbstractShowcase from './AbstractShowcase';
 import type ShowcaseMetadata from './ShowcaseMetadata';
 
-export default class GroupedShowcase extends BaseShowcase {
+export default class GroupedShowcase extends AbstractShowcase {
   constructor(
-    public children: BaseShowcase[],
+    public children: AbstractShowcase[],
     metadata: ShowcaseMetadata,
   ) {
     super('grouped', metadata);

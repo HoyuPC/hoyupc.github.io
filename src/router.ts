@@ -3,6 +3,7 @@ import MainTab from './tabs/MainTab.vue';
 import ShowcaseTab from './tabs/ShowcaseTab.vue';
 import HomeView from './views/HomeView.vue';
 import ShowcaseView from './views/ShowcaseView.vue';
+import CalendarTab from './tabs/CalendarTab.vue';
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -21,6 +22,13 @@ const router = createRouter({
         {
           path: '/showcase',
           component: ShowcaseTab,
+          meta: {
+            tabIndex: 1,
+          },
+        },
+        {
+          path: '/calendar',
+          component: CalendarTab,
           meta: {
             tabIndex: 2,
           },

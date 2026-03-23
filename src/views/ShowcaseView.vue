@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type BaseShowcase from '@/showcase/BaseShowcase';
-import type GroupedShowcase from '@/showcase/GroupedShowcase';
+import type AbstractShowcase from '@/showcase/AbstractShowcase';
 import { getShowcases } from '@/showcase/loader';
 import NotFoundShowcase from '@/showcase/NotFoundShowcase';
 import { computed, defineAsyncComponent, onMounted, onUnmounted, ref } from 'vue';
@@ -9,13 +8,17 @@ import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 
-const showcaseList = ref<Map<string, BaseShowcase>>();
+const showcaseList = ref<Map<string, AbstractShowcase>>();
 getShowcases().then((loaded) => (showcaseList.value = loaded.map));
 
 const showcaseId = computed(() => route.params.id as string);
 
 const current = computed(() => {
   return showcaseList.value?.get(showcaseId.value);
+});
+
+const parent = computed(() => {
+  return current.value?.metadata.parent;
 });
 
 function onKeyDown(e: KeyboardEvent) {
@@ -31,7 +34,7 @@ onUnmounted(() => document.removeEventListener('keydown', onKeyDown));
 <template>
   <div class="container" v-if="current ?? NotFoundShowcase" :key="showcaseId">
     <nav>
-      <h1>{{ (current ?? NotFoundShowcase).metadata.name }}</h1>
+      <h1>{{ (parent ?? current ?? NotFoundShowcase).metadata.name }}</h1>
       <button id="close-button"><span @click="router.back()" class="material-symbols-outlined"> close </span></button>
     </nav>
     <div class="showcase-view">

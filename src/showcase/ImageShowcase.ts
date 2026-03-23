@@ -1,7 +1,7 @@
-import BaseShowcase from './BaseShowcase';
+import AbstractShowcase from './AbstractShowcase';
 import type ShowcaseMetadata from './ShowcaseMetadata';
 
-export default class ImageShowcase extends BaseShowcase {
+export default class ImageShowcase extends AbstractShowcase {
   constructor(
     public imageSrc: string,
     metadata: ShowcaseMetadata,

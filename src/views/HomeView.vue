@@ -5,6 +5,7 @@ import { RouterLink, RouterView } from 'vue-router';
 const routes: RouteLinks = {
   '/': 'ホーム',
   '/showcase': '作品紹介',
+  '/calendar': '活動予定',
 };
 
 type RouteLinks = {
@@ -109,14 +110,16 @@ type RouteLinks = {
 nav {
   display: flex;
   justify-content: center;
+  overflow: auto hidden;
   gap: 4px;
   background: linear-gradient(var(--title-background), var(--color-5));
   border-bottom: 2px solid var(--color-1);
-  padding: 2px;
+  padding: 4px;
   padding-bottom: 0;
 }
 
 .tablink {
+  flex-shrink: 0;
   border: 2px solid var(--color-3);
   border-radius: 6px;
   cursor: pointer;

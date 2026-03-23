@@ -10,7 +10,8 @@
 
 <style scoped lang="css">
 * {
-  text-align: left;
+  text-align: justify;
+  text-align-last: left;
 }
 
 .spacing {

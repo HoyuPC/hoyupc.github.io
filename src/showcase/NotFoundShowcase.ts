@@ -1,11 +1,11 @@
-import BaseShowcase from './BaseShowcase';
+import AbstractShowcase from './AbstractShowcase';
 import ShowcaseMetadata from './ShowcaseMetadata';
 
-class NotFoundShowcase extends BaseShowcase {
+class NotFoundShowcase extends AbstractShowcase {
   constructor() {
     super(
       'not_found',
-      new ShowcaseMetadata('Error', '_error', '', [], [], undefined, './default_thumbnail.webp', 'hidden'),
+      new ShowcaseMetadata('Error', '_error', '', [], [], undefined, './default_thumbnail.webp', 'hidden', undefined),
     );
   }
 

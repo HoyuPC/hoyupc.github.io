@@ -1,7 +1,7 @@
-import BaseShowcase from './BaseShowcase';
+import AbstractShowcase from './AbstractShowcase';
 import type ShowcaseMetadata from './ShowcaseMetadata';
 
-export default class ScratchShowcase extends BaseShowcase {
+export default class ScratchShowcase extends AbstractShowcase {
   constructor(
     public projectId: number,
     public turbowarp: boolean,

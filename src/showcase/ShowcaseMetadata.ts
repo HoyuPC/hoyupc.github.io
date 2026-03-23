@@ -1,3 +1,5 @@
+import type AbstractShowcase from './AbstractShowcase';
+
 export default class ShowcaseMetadata {
   constructor(
     public name: string,
@@ -8,6 +10,7 @@ export default class ShowcaseMetadata {
     public version: string | undefined,
     public thumbnailSrc: string,
     public status: ShowcaseStatus,
+    public parent: AbstractShowcase | undefined,
   ) {}
 }
 

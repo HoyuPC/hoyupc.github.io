@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseShowcase from '@/showcase/BaseShowcase';
+import AbstractShowcase from '@/showcase/AbstractShowcase';
 import GroupedShowcase from '@/showcase/GroupedShowcase';
 import LinkShowcase from '@/showcase/LinkShowcase';
 import utils from '@/showcase/util';
@@ -8,14 +8,14 @@ import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   id: string;
-  showcase: BaseShowcase;
+  showcase: AbstractShowcase;
 }>();
 
 const groupedPopup = ref<HTMLDialogElement>();
 
 const router = useRouter();
 
-function onClick(showcase: BaseShowcase) {
+function onClick(showcase: AbstractShowcase) {
   if (showcase.metadata.status !== 'normal') return;
 
   if (showcase instanceof LinkShowcase) {

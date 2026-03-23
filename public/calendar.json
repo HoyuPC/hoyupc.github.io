@@ -1,0 +1,92 @@
+{
+  "highlightDays": ["Mon", "Thu"],
+  "months": [
+    {
+      "month": [2026, 5],
+      "events": [
+        {
+          "date": 3,
+          "type": "holiday",
+          "text": "憲法記念日"
+        },
+        {
+          "date": 4,
+          "type": "holiday",
+          "text": "みどりの日"
+        },
+        {
+          "date": 5,
+          "type": "holiday",
+          "text": "こどもの日"
+        },
+        {
+          "date": 6,
+          "type": "holiday",
+          "text": "振替休日"
+        },
+        {
+          "date": 7,
+          "type": "holiday",
+          "text": "創立記念日"
+        },
+        {
+          "date": 20,
+          "type": "schoolExam",
+          "text": "中間考査"
+        },
+        {
+          "date": 21,
+          "type": "schoolExam",
+          "text": "中間考査"
+        },
+        {
+          "date": 22,
+          "type": "schoolExam",
+          "text": "中間考査"
+        },
+        {
+          "date": 23,
+          "type": "schoolExam",
+          "text": "中間考査"
+        }
+      ],
+      "schedule": {
+        "4": false,
+        "7": false,
+        "11": [true, "試験２週間前"],
+        "14": [false, "試験１週間前"],
+        "18": [false, "試験１週間前"],
+        "25": true,
+        "28": true
+      }
+    },
+    {
+      "month": [2026, 4],
+      "events": [
+        {
+          "date": 7,
+          "type": "schoolEvent",
+          "text": "入学式"
+        },
+        {
+          "date": 8,
+          "type": "schoolEvent",
+          "text": "始業式"
+        },
+        {
+          "date": 29,
+          "type": "holiday",
+          "text": "昭和の日"
+        }
+      ],
+      "schedule": {
+        "13": true,
+        "16": true,
+        "20": true,
+        "23": true,
+        "27": true,
+        "30": [false, "オンライン授業"]
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import type ShowcaseMetadata from './ShowcaseMetadata';
 
-export default abstract class BaseShowcase {
+export default abstract class AbstractShowcase {
   constructor(
     public type: string,
     public metadata: ShowcaseMetadata,
