@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 
 const props = defineProps<{
   dataPath: string;
@@ -9,6 +9,8 @@ const props = defineProps<{
 const data = ref<CalendarData>();
 const state = ref<State>('loading');
 const errorReason = ref<any>();
+const container = ref<HTMLElement>();
+const table = ref<HTMLTableElement>();
 
 type State = 'loading' | 'error' | 'ready';
 
@@ -25,7 +27,7 @@ type Month = {
 
 type Event = {
   date: number;
-  type: 'schoolEvent' | 'schoolExam' | 'holiday' | undefined;
+  type: 'schoolEvent' | 'schoolExam' | 'schoolHoliday' | 'holiday' | undefined;
   text: string;
 };
 
@@ -62,6 +64,12 @@ onMounted(() => {
         .catch((reason) => error(reason));
     })
     .catch((reason) => error(reason));
+
+  addEventListener('resize', () => resizeTable());
+});
+
+onUnmounted(() => {
+  removeEventListener('resize', () => resizeTable());
 });
 
 function processData() {
@@ -103,12 +111,27 @@ function processData() {
       i--;
     }
 
-    if (days > 400) break;
+    if (days > 300) break;
   }
 
-  console.log(displayWeeks);
-
   state.value = 'ready';
+
+  nextTick().then(() => resizeTable());
+}
+
+function resizeTable() {
+  if (state.value !== 'ready') return;
+
+  let targetWidth = document.querySelector('.tab-view')!.clientWidth;
+  let currentWidth = table.value!.clientWidth;
+  if (targetWidth < currentWidth) {
+    table.value!.style.transform = `scale(${targetWidth / currentWidth})`;
+    container.value!.style.height = '' + table.value!.clientHeight * (targetWidth / currentWidth) + 'px';
+  } else {
+    table.value!.style.transform = '';
+    container.value!.style.height = '';
+  }
+  table.value!.classList.remove('preparing');
 }
 
 function getOrCreateDayInfo(year: number, month: number, day: number): DayInfo {
@@ -180,8 +203,8 @@ function isActive(day: DayInfo): boolean {
   <p class="info-box error" v-if="state === 'error'">{{ errorReason }}</p>
   <p v-if="state === 'ready' && !displayWeeks.length">データなし</p>
 
-  <div class="main" v-if="state === 'ready' && displayWeeks.length">
-    <table>
+  <div class="main" ref="container" v-if="state === 'ready' && displayWeeks.length">
+    <table class="preparing" ref="table">
       <thead>
         <tr class="header-row">
           <th v-for="(value, key) in dayNames" class="day-header" :class="getClassForDay(key)" scope="col">
@@ -194,20 +217,26 @@ function isActive(day: DayInfo): boolean {
           <th
             class="day"
             v-for="(day, dayIndex) in week as DayInfo[]"
-            :class="!day.hasDataForMonth ? 'missing-data' : []"
+            :class="!day.hasDataForMonth ? 'missing-data' : undefined"
           >
             <span class="day-label" :class="getClassForDayInfo(day)">{{
               getDayLabelText(weekIndex, dayIndex, day)
             }}</span>
-            <span v-if="!isActive(day) && day.events[0]" v-for="event in day.events">{{ event.text }}</span>
+            <span v-if="!isActive(day) && day.events[0]">{{ day.events[0].text }}</span>
             <span
               v-if="
                 day.hasDataForMonth &&
                 ((data!.highlightDays?.includes(day.dayOfWeek) && !day.events[0]) || isActive(day))
               "
-              :class="Array.isArray(day.active) ? 'tooltip' : []"
+              :class="Array.isArray(day.active) ? 'tooltip-container' : undefined"
             >
-              {{ isActive(day) }}
+              <span
+                :class="Array.isArray(day.active) ? 'hover-me' : undefined"
+                :aria-haspopup="Array.isArray(day.active)"
+                :tabindex="Array.isArray(day.active) ? 0 : undefined"
+              >
+                {{ isActive(day) }}
+              </span>
               <span v-if="Array.isArray(day.active)" class="tooltip-contents">{{ day.active[1] }}</span>
             </span>
           </th>
@@ -232,6 +261,12 @@ function isActive(day: DayInfo): boolean {
 table {
   border-spacing: 0;
   border: 2px solid var(--black-1);
+  transform-origin: top center;
+}
+
+table.preparing {
+  visibility: hidden;
+  opacity: 0;
 }
 
 table th {
@@ -241,6 +276,10 @@ table th {
 .header-row th {
   border-bottom: 2px solid var(--black-1);
   height: 40px;
+}
+
+table tr {
+  display: flex;
 }
 
 .header-highlight,
@@ -254,42 +293,64 @@ table th {
     color: red;
   }
   &.today {
-    text-decoration: underline dotted black 2px;
-    font-weight: 600;
+    font-weight: 700;
   }
 }
 
-.tooltip {
+.missing-data {
+  background-color: var(--color-5);
+}
+
+.tooltip-container {
   position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
-  cursor: pointer;
+}
+
+.hover-me {
+  text-decoration: underline dotted var(--black-1) 2px !important;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:is(:hover, :focus, :active) + .tooltip-contents {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
 }
 
 .tooltip-contents {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-origin: top center;
+  min-width: 130px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--black-1);
+  color: var(--color-6);
   visibility: hidden;
   opacity: 0;
-  position: absolute;
-  width: 130px;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -65px;
-  background-color: black;
-  color: #ffffff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
-  z-index: 1;
   transition: all 200ms;
-}
 
-.tooltip:hover .tooltip-contents {
-  visibility: visible;
-  opacity: 1;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 99%;
+    left: 50%;
+    border-style: solid;
+    border-width: 8px 8px 0 8px;
+    border-color: black transparent transparent transparent;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
 }
 
 .day,
 .day-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100px;
   height: 80px;
 }

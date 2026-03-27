@@ -5,7 +5,6 @@ import { RouterLink, RouterView } from 'vue-router';
 const routes: RouteLinks = {
   '/': 'ホーム',
   '/showcase': '作品紹介',
-  '/calendar': '活動予定',
 };
 
 type RouteLinks = {

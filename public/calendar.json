@@ -21,12 +21,12 @@
         },
         {
           "date": 6,
-          "type": "holiday",
+          "type": "schoolHoliday",
           "text": "振替休日"
         },
         {
           "date": 7,
-          "type": "holiday",
+          "type": "schoolHoliday",
           "text": "創立記念日"
         },
         {
