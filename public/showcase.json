@@ -76,5 +76,14 @@
     "thumbnailSrc": "./showcase/games/shooting_game/thumbnail.webp",
     "href": "/showcase/games/shooting_game/Shooting.html",
     "version": "0.0.1-alpha.1"
+  },
+  {
+    "name": "Racing Game",
+    "id": "race_game",
+    "type": "link",
+    "category": "game",
+    "flags": ["keyboard_required", "external"],
+    "href": "/showcase/games/race_game/race_game.html",
+    "version": "0.0.1-alpha.1"
   }
 ]
