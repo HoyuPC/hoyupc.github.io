@@ -48,18 +48,18 @@
         };
         let items1=[];
         for (let i=0;i<5;i++){
-            items1.push([banana,100+Math.random()*(stage.goal-100),Math.trunc(p1.height*(1/3)*2*(0.5-Math.random()))]);
+            //items1.push([banana,100+Math.random()*(stage.goal-100),Math.trunc(p1.height*(1/3)*2*(0.5-Math.random()))]);
         }
         for (let i=0;i<3;i++){
-            items1.push([boost,100+Math.random()*(stage.goal-100),Math.trunc(p1.height*(1/3)*2*(0.5-Math.random()))]);
+            //items1.push([boost,100+Math.random()*(stage.goal-100),Math.trunc(p1.height*(1/3)*2*(0.5-Math.random()))]);
         }
         console.log(items1);
         let items2=[];
         for (let i=0;i<5;i++){
-            items2.push([banana,100+Math.random()*(stage.goal-100),Math.trunc(p2.height*(2/3)*2*(0.5-Math.random()))]);
+            //items2.push([banana,100+Math.random()*(stage.goal-100),Math.trunc(p2.height*(2/3)*2*(0.5-Math.random()))]);
         }
         for (let i=0;i<3;i++){
-            items2.push([boost,100+Math.random()*(stage.goal-100),Math.trunc(p2.height*(2/3)*2*(0.5-Math.random()))]);
+            //items2.push([boost,100+Math.random()*(stage.goal-100),Math.trunc(p2.height*(2/3)*2*(0.5-Math.random()))]);
         }
         console.log(items2);
         p1_img.src="img/player1.svg";
@@ -164,30 +164,30 @@
                     }
                 }
             }
-            if (player1.x+player1_w/2>=stage.goal&&player2.x+player2_w/2<stage.goal){
+            if (player1.x+player1_w/2>=stage.goal){
                 isgoal[0]=true;
-                procedure=4;
+                if(procedure<=3)procedure=4;
             }
         }
         function hit_check2(){
             for (let i=items2.length-1;i>=0;i--){
                 if (items2[i][0]==banana){
-                    if (hitRect(player2.x-player2_w/2,player2.y-player2_h/2,player2_w,player2_h,items2[i][1]/*-banana.width/2*/,items2[i][2]/*-banana.height/2*/,banana.width,banana.height)){
+                    if (hitRect(player2.x-player2_w/2,player2.y-player2_h/2,player2_w,player2_h,items2[i][1],items2[i][2],banana.width,banana.height)){
                         player2.v=0;
                         items2=items2.filter(num=>num!==items2[i]);
                         //console.log("hit peel");
                     }
                 }else if (items2[i][0]==boost){
-                    if (hitRect(player2.x-player2_w/2,player2.y-player2_h/2,player2_w,player2_h,items2[i][1]/*-boost.width/2*/,items2[i][2]/*-boost.height/2*/,boost.width,boost.height)){
+                    if (hitRect(player2.x-player2_w/2,player2.y-player2_h/2,player2_w,player2_h,items2[i][1],items2[i][2],boost.width,boost.height)){
                         player2.v=60;
                         items2=items2.filter(num=>num!==items2[i]);
                         //console.log("hit boost");
                     }
                 }
             }
-            if (player2.x+player2_w/2>=stage.goal&&player1.x+player1_w<stage.goal){
+            if (player2.x+player2_w/2>=stage.goal){
                 isgoal[1]=true;
-                procedure=4;
+                if (procedure<=3)procedure=4;
             }
         }
         let procedure=0;
@@ -195,6 +195,7 @@
         let change_timer=0;
         let change_counter=60;
         let start_counter=3;
+        let result=NaN;
         function race_engine(){
             switch(procedure){
                 case 0:
@@ -212,10 +213,10 @@
                         ctx1.strokeStyle="white";
                         ctx2.fillStyle="black";
                         ctx2.strokeStyle="white";
-                        ctx1.strokeText("GO!",0,0);
-                        ctx1.fillText("GO!",0,0);
-                        ctx2.strokeText("GO!",0,0);
-                        ctx2.fillText("GO!",0,0);
+                        ctx1.strokeText("OK!",0,0);
+                        ctx1.fillText("OK!",0,0);
+                        ctx2.strokeText("OK!",0,0);
+                        ctx2.fillText("OK!",0,0);
                         procedure=1;
                     }else{
                         ctx1.clearRect(0,0,p1.width,p1.height);
@@ -237,8 +238,8 @@
                             ctx1.strokeText("press D",0,40);
                             ctx1.fillText("press D",0,40);
                         }else{
-                            ctx1.strokeText("GO!",0,0);
-                            ctx1.fillText("GO!",0,0);
+                            ctx1.strokeText("OK!",0,0);
+                            ctx1.fillText("OK!",0,0);
                         }
                         if(!ready[1]){
                             ctx2.strokeText("READY?",0,-40);
@@ -246,8 +247,8 @@
                             ctx2.strokeText("press →",0,40);
                             ctx2.fillText("press →",0,40);
                         }else{
-                            ctx2.strokeText("GO!",0,0);
-                            ctx2.fillText("GO!",0,0);
+                            ctx2.strokeText("OK!",0,0);
+                            ctx2.fillText("OK!",0,0);
                         }
                     }
                     if (keys["d"]){
@@ -327,23 +328,54 @@
                     break;
                 case 4:
                     repeat();
+                    if (isgoal[0]&&isgoal[1]){
+                        result=0;
+                    }
                     if (isgoal[0]&&!isgoal[1]){
-                        ctx1.font="48px sans-serif";
-                        ctx1.lineWidth=7;
-                        ctx1.textAlign="center";
-                        ctx1.fillStyle="black";
-                        ctx1.strokeStyle="white";
-                        ctx1.strokeText("GOAL!",0,0);
-                        ctx1.fillText("GOAL!",0,0);
+                        result=1;
                     }
                     if (isgoal[1]&&!isgoal[0]){
-                        ctx2.font="48px sans-serif";
-                        ctx2.lineWidth=7;
-                        ctx2.textAlign="center";
-                        ctx2.fillStyle="black";
-                        ctx2.strokeStyle="white";
-                        ctx2.strokeText("GOAL!",0,0);
-                        ctx2.fillText("GOAL!",0,0);
+                        result=2;
+                    }
+                    procedure=5;
+                    break;
+                case 5:
+                    repeat();
+                    switch(result){
+                        case 0:
+                            ctx1.font="48px sans-serif";
+                            ctx1.lineWidth=7;
+                            ctx1.textAlign="center";
+                            ctx1.fillStyle="black";
+                            ctx1.strokeStyle="white";
+                            ctx1.strokeText("DRAW",0,0);
+                            ctx1.fillText("DRAW",0,0);
+                            ctx2.font="48px sans-serif";
+                            ctx2.lineWidth=7;
+                            ctx2.textAlign="center";
+                            ctx2.fillStyle="black";
+                            ctx2.strokeStyle="white";
+                            ctx2.strokeText("DRAW",0,0);
+                            ctx2.fillText("DRAW",0,0);
+                            break;
+                        case 1:
+                            ctx1.font="48px sans-serif";
+                            ctx1.lineWidth=7;
+                            ctx1.textAlign="center";
+                            ctx1.fillStyle="black";
+                            ctx1.strokeStyle="white";
+                            ctx1.strokeText("GOAL!",0,0);
+                            ctx1.fillText("GOAL!",0,0);
+                            break;
+                        case 2:
+                            ctx2.font="48px sans-serif";
+                            ctx2.lineWidth=7;
+                            ctx2.textAlign="center";
+                            ctx2.fillStyle="black";
+                            ctx2.strokeStyle="white";
+                            ctx2.strokeText("GOAL!",0,0);
+                            ctx2.fillText("GOAL!",0,0);
+                            break;
                     }
             }
             requestAnimationFrame(race_engine);
@@ -416,9 +448,6 @@
             player2.y+=Math.trunc(player2.v*Math.sin(Math.PI/180*p2_r));
             if (Math.abs(player2.y)>=p2.height*(3/8)+player2_h/2)player2.y-=Math.trunc(player2.v*Math.sin(Math.PI/180*p2_r));
             hit_check2();
-            /*if (){
-                
-            }*/
             draw();
         }
         race_engine();
