@@ -9,6 +9,7 @@ import ScheduleCalendar from '@/components/ScheduleCalendar.vue';
     <p>活動予定・活動日は変更される可能性があります。あらかじめご了承ください。</p>
   </div>
 
+  <p>以下は、4月の体験入部予定表です。</p>
   <ScheduleCalendar data-path="./calendar.json" :display-week-count="4"></ScheduleCalendar>
 </template>
 

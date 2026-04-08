@@ -105,11 +105,7 @@ function processData() {
       days++;
     }
 
-    if (week.some((d) => d.hasDataForMonth)) {
-      displayWeeks.value.push(week);
-    } else {
-      i--;
-    }
+    displayWeeks.value.push(week);
 
     if (days > 300) break;
   }
@@ -231,7 +227,7 @@ function isActive(day: DayInfo): boolean {
               :class="Array.isArray(day.active) ? 'tooltip-container' : undefined"
             >
               <span
-                :class="Array.isArray(day.active) ? 'hover-me' : undefined"
+                :class="[Array.isArray(day.active) ? 'hover-me' : undefined, isActive(day) ? 'active' : 'inactive']"
                 :aria-haspopup="Array.isArray(day.active)"
                 :tabindex="Array.isArray(day.active) ? 0 : undefined"
               >
@@ -330,6 +326,7 @@ table tr {
   visibility: hidden;
   opacity: 0;
   transition: all 200ms;
+  z-index: 1;
 
   &::after {
     content: '';
@@ -344,6 +341,21 @@ table tr {
     transform: translateX(-50%);
     pointer-events: none;
   }
+}
+
+.active,
+.inactive {
+  display: block;
+  width: 40px;
+  aspect-ratio: 1 / 1;
+  color: transparent;
+  user-select: none;
+}
+
+.active {
+  background-color: red;
+  clip-path: path('M20 0 A20 20 0 1 1 20 40 A20 20 0 1 1 20 0 Z M20 2 A18 18 0 1 0 20 38 A18 18 0 1 0 20 2 Z');
+  clip-rule: evenodd;
 }
 
 .day,
