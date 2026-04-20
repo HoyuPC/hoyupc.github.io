@@ -1,9 +1,25 @@
 <!DOCTYPE html>
 <html lang="ja">
     <style>
-        .video{
-            border:1px black solid;
+        html, body {
+            overflow: hidden;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        canvas {
+            position: absolute;
             background-color:gray;
+            top: 0;
+            left: 0;
+        }
+
+        #p2 {
+            top: 50vh;
+            border-top: 1px solid black;
         }
     </style>
     <head>
@@ -11,20 +27,16 @@
         <title>Race Game</title>
     </head>
     <body>
-        <canvas id="p1" class="video" style="position:absolute"></canvas>
-        <canvas id="p2" class="video" style="position:absolute"></canvas>
+        <canvas id="p1"></canvas>
+        <canvas id="p2"></canvas>
     </body>
     <script>
         const p1=document.getElementById("p1");
         const p2=document.getElementById("p2");
         p1.width=window.innerWidth;
-        p1.height=window.innerHeight/2-1;
+        p1.height=window.innerHeight/2;
         p2.width=window.innerWidth;
-        p2.height=window.innerHeight/2-1;
-        p1.style.top=0;
-        p1.style.left=0;
-        p2.style.top=window.innerHeight/2-2;
-        p2.style.left=0;
+        p2.height=window.innerHeight/2;
         const ctx1=p1.getContext("2d");
         const ctx2=p2.getContext("2d");
         const p1_img=new Image();
@@ -62,10 +74,10 @@
             items2.push([boost,100+Math.random()*(stage.goal-100),Math.trunc(p2.height*(2/3)*2*(0.5-Math.random()))]);
         }
         console.log(items2);
-        p1_img.src="img/player1.svg";
-        p2_img.src="img/player2.svg";
-        banana.src="img/banana_peel.svg";
-        boost.src="img/booster.svg";
+        p1_img.src="/player1.svg";
+        p2_img.src="/player2.svg";
+        banana.src="/banana_peel.svg";
+        boost.src="/booster.svg";
         let player1_w;
         let player1_h;
         let player2_w;
