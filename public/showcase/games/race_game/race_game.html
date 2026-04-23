@@ -4,22 +4,13 @@
         html, body {
             overflow: hidden;
         }
-
-        * {
-            padding: 0;
-            margin: 0;
-        }
         
         canvas {
             position: absolute;
             background-color:gray;
-            top: 0;
-            left: 0;
-        }
-
-        #p2 {
-            top: 50vh;
-            border-top: 1px solid black;
+            top: 0px;
+            left: 0px;
+            border: black 1px solid;
         }
     </style>
     <head>
@@ -37,6 +28,7 @@
         p1.height=window.innerHeight/2;
         p2.width=window.innerWidth;
         p2.height=window.innerHeight/2;
+        p2.style.top=p1.height+"px";
         const ctx1=p1.getContext("2d");
         const ctx2=p2.getContext("2d");
         const p1_img=new Image();
@@ -58,58 +50,61 @@
         const stage={
             goal:window.innerWidth*10
         };
+        //主要データの宣言
         let items1=[];
         for (let i=0;i<5;i++){
             items1.push([banana,100+Math.random()*(stage.goal-100),Math.trunc(p1.height*(1/3)*2*(0.5-Math.random()))]);
-        }
+        }//バナナの皮位置情報ランダム入力
         for (let i=0;i<3;i++){
             items1.push([boost,100+Math.random()*(stage.goal-100),Math.trunc(p1.height*(1/3)*2*(0.5-Math.random()))]);
-        }
+        }//ブースター位置情報ランダム入力
+        //↑p1に対応
         console.log(items1);
         let items2=[];
         for (let i=0;i<5;i++){
             items2.push([banana,100+Math.random()*(stage.goal-100),Math.trunc(p2.height*(2/3)*2*(0.5-Math.random()))]);
-        }
+        }//バナナの皮位置情報ランダム入力
         for (let i=0;i<3;i++){
             items2.push([boost,100+Math.random()*(stage.goal-100),Math.trunc(p2.height*(2/3)*2*(0.5-Math.random()))]);
-        }
+        }//ブースター位置情報ランダム入力
+        //↑p2に対応
         console.log(items2);
-        p1_img.src="/player1.svg";
-        p2_img.src="/player2.svg";
-        banana.src="/banana_peel.svg";
-        boost.src="/booster.svg";
-        let player1_w;
+		  let player1_w;
         let player1_h;
         let player2_w;
         let player2_h;
+        p1_img.src="player1.png";
+        p2_img.src="player2.png";
+        banana.src="banana_peel.png";
+        boost.src="booster.png";//画像入力
         p1_img.onload=()=>{
-            player1_w=p1_img.width;
-            player1_h=p1_img.height;
+            player1_w=p1_img.width/2;
+            player1_h=p1_img.height/2;
         };
         p2_img.onload=()=>{
-            player2_w=p2_img.width;
-            player2_h=p2_img.height;
+            player2_w=p2_img.width/2;
+            player2_h=p2_img.height/2;
         };
         banana.onload=()=>{
             //console.log(banana.width,banana.height);
         };
         function draw1_items(){
             for (let i=items1.length-1;i>=0;i--){
-                ctx1.drawImage(items1[i][0],items1[i][1]-(player1.x/*-player1_w/2*/),items1[i][2]-(player1.y/*-player1_h/2*/));
-            }
+                ctx1.drawImage(items1[i][0],items1[i][1]-(player1.x/*-player1_w/2*/),items1[i][2]-(player1.y/*-player1_h/2*/),items1[i][0].width/2,items1[i][0].height/2);
+            }//p1アイテム反映
         }
         function draw2_items(){
             for (let i=items2.length-1;i>=0;i--){
-                ctx2.drawImage(items2[i][0],items2[i][1]-(player2.x/*-player2_w/2*/),items2[i][2]-(player2.y/*-player2_h/2*/));
-            }
+                ctx2.drawImage(items2[i][0],items2[i][1]-(player2.x/*-player2_w/2*/),items2[i][2]-(player2.y/*-player2_h/2*/),items2[i][0].width/2,items2[i][0].height/2);
+            }//p2アイテム反映
         }
-        function draw(){
+        function draw(){//諸々描画
             ctx1.setTransform(1,0,0,1,0,0);
             ctx1.clearRect(0,0,p1.width,p1.height);
             ctx1.strokeStyle="white";
             ctx1.lineWidth=3;
             ctx1.strokeRect(-3,-player1.y+p1.height/12,5+p1.width,p1.height*(10/12));
-            ctx1.fillStyle="white";
+            ctx1.fillStyle="white";//白線描画
             ctx1.translate(0,p1.height/2);
             for (let i=-2;i<13;i+=2){
                 ctx1.beginPath();
@@ -127,7 +122,7 @@
             draw1_items();
             ctx1.save();
             ctx1.rotate(Math.PI/180*p1_r);
-            ctx1.drawImage(p1_img,-player1_w/2,-player1_h/2);
+            ctx1.drawImage(p1_img,-player1_w/2,-player1_h/2,player1_w,player1_h);
             ctx1.restore();
             
             ctx2.setTransform(1,0,0,1,0,0);
@@ -153,7 +148,7 @@
             draw2_items();
             ctx2.save();
             ctx2.rotate(Math.PI/180*p2_r);
-            ctx2.drawImage(p2_img,-player2_w/2,-player2_h/2);
+            ctx2.drawImage(p2_img,-player2_w/2,-player2_h/2,player2_w,player2_h);
             ctx2.restore();
         }
         function hitRect(ax,ay,aw,ah,bx,by,bw,bh){
@@ -176,7 +171,7 @@
                     }
                 }
             }
-            if (player1.x+player1_w/2>=stage.goal){
+            if (player1.x>=stage.goal){
                 isgoal[0]=true;
                 if(procedure<=3)procedure=4;
             }
@@ -197,7 +192,7 @@
                     }
                 }
             }
-            if (player2.x+player2_w/2>=stage.goal){
+            if (player2.x>=stage.goal){
                 isgoal[1]=true;
                 if (procedure<=3)procedure=4;
             }
@@ -462,6 +457,6 @@
             hit_check2();
             draw();
         }
-        race_engine();
+			race_engine();
     </script>
 </html>
