@@ -1,14 +1,14 @@
 <template>
   <footer>
     <div class="social">
-      <a target="_blank" href="https://github.com/3036-pcc">
+      <a target="_blank" href="https://github.com/HoyuPC">
         <img src="/social/github_white.svg" alt="GitHub" />
       </a>
       <a target="_blank" href="https://www.instagram.com/hoyu_pc" hidden>
         <img src="/social/instagram_white.svg" alt="Instagram" />
       </a>
     </div>
-    <p class="copyright">&copy; 朋優学院高等学校 PC部</p>
+    <p class="copyright">&copy; 朋優学院高等学校 パソコン部</p>
     <p class="bragging">このウェブサイトはパソコン部の部員によって作成されました。</p>
   </footer>
 </template>
