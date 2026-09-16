@@ -85,5 +85,16 @@
     "flags": ["keyboard_required", "external"],
     "href": "/showcase/games/race_game/race_game.html",
     "version": "0.0.1-alpha.5"
+  },
+  {
+    "name": "トレジャーハントプラットフォーマー",
+    "id": "treasure_game",
+    "type": "link",
+    "category": "game",
+    "flags": ["keyboard_required", "external"],
+    "tags": ["festival_2026"],
+    "thumbnailSrc": "./showcase/festival_2026/treasure_game/treasure_box.png",
+    "href": "/showcase/festival_2026/treasure_game/tresure_game.html",
+    "version": "0"
   }
 ]

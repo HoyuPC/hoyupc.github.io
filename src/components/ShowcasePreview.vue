@@ -88,6 +88,17 @@ function onClick(showcase: AbstractShowcase) {
   }
 }
 
+h3 {
+  text-wrap: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+}
+
+h3:hover {
+  overflow: visible;
+  text-overflow: unset;
+}
+
 img {
   aspect-ratio: 4 / 3;
   object-fit: cover;

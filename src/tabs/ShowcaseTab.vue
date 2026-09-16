@@ -28,7 +28,7 @@ getShowcases().then(
 
 .showcase-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 50%);
   gap: 24px;
 }
 

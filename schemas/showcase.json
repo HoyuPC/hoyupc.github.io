@@ -166,10 +166,10 @@
       "items": {
         "anyOf": [
           {
-            "enum": ["festival_2025"]
+            "enum": ["math_museum"]
           },
           {
-            "type": "string"
+            "pattern": "festival_\\d+"
           }
         ]
       }

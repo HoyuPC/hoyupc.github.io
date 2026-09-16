@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>treasure</title>
+	<style>
+		#display {
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			width: 100vw;
+			height: 100vh;
+			border: 1px black solid;
+		}
+        #option {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 100vw;
+            height: 100vh;
+            border: 1px black solid;
+            text-align: center;
+            background-color: gray;
+        }
+        #title {
+            margin-top: 25vh;
+        }
+        button {
+            background-color: brown;
+            color: blue;
+            border: 2px white solid;
+            width: 10vw;
+            height: auto;
+            font-size: 30px;
+            margin-top: 2px;
+        }
+        button:hover {
+            background-color: brown;
+            color: blue;
+            border: 4px yellow solid;
+            width: 10vw;
+            height: auto;
+            font-size: 30px;
+            margin-top: 0px;
+        }
+        #mes {
+            top: 0px;
+            left: 0px;
+            display: none;
+            position: absolute;
+            background-color: black;
+            color: white;
+            font-align: center;
+            font-size: 30px;
+            padding: 5px;
+            border: white 1px solid;
+        }
+        #cre {
+            display: none;
+            top: 0px;
+            left: 0px;
+            position: absolute;
+        }
+        .manual {
+            display: none;
+            left: 0px;
+            background-color: black;
+            color: white;
+            font-align: center;
+            font-size: 30px;
+            padding: 5px;
+            border: white 1px solid;
+            display: none;
+        }
+        .manual:hover {
+            display: none;
+            left: 0px;
+            background-color: gray;
+            color: black;
+            font-align: center;
+            font-size: 30px;
+            border: black 1px solid;
+            display: none;
+        }
+	</style>
+</head>
+<body>
+	<header>
+        <div id = "option">
+            <img id = "title" src = "title.png"><br>
+            <div id = "info">作品概要<br>青色のplayerを操作して5つのステージを突破せよ！<br>スタートからゴールまでにかかった時間も測定されるので<br>速くゴールできるように頑張ってください！<br><br>
+            ※注意※<br>プレイ中に不自然な挙動を起こす可能性があります<br>プレイに支障が出る場合はサイトを更新して始めからやり直してください<br>更新しても同じ不具合が発生する場合はPC部の方にお知らせください</div>
+            <button onclick = start()>スタート</button>
+            <div id = "cre">※google翻訳対応※</div>
+        </div>
+		<canvas id = "display" style = "display:none"></canvas>
+        <div id ="mes" translate = "yes">
+            <div id = "tips1" style = "display: block;">移動:aまたはd<br>ジャンプ:w</div>
+            <div id = "tips2" style = "display: none;">フック:s長押し+qまたはe<br>フック発射向き:s長押し+マウス移動</div>
+            <button id = "remind" class = "manual" onclick = expand()>操作説明</button>
+            <button id = "close" class = "manual" onclick = shut()>閉じる</button>
+            <div id = "tips3" style = "display: none;">CLEAR!<br>time↓
+                <div id = "time"></div>
+            </div>
+        </div>
+	</header>
+	<script>
+		const dp = document.getElementById("display");
+        const op = document.getElementById("option");
+        const message = document.getElementById("mes");
+        const time = document.getElementById("time");
+        const first = document.getElementById("tips1");
+        const second = document.getElementById("tips2");
+        const sixth = document.getElementById("tips3");
+        const rem = document.getElementById("remind");
+        const clo = document.getElementById("close");
+        dp.width = window.innerWidth;
+		dp.height = window.innerHeight;
+		const ctx = dp.getContext("2d");
+        let change_stage = {
+            first :[
+                [0,dp.height*(5/6),dp.width,dp.height/6],
+                [dp.width/6,dp.height*(4/6),dp.width-dp.width/6,dp.height*(2/6)],
+                [dp.width/2-160,dp.height*(4/6)-225,160,40],
+                [dp.width*(3/4),dp.height/2,dp.width/4,dp.height*(3/6)],
+                [dp.width-20,dp.height/3]
+            ],
+            second :[
+                [0,0,dp.width,dp.height/6],
+                [dp.width/3-160,dp.height/3,160,40],
+                [0,dp.height*(5/6),dp.width/6,dp.height/6],
+                [dp.width/3-40,dp.height/3,40,dp.height*(2/3)],
+                [dp.width/2,dp.height*(5/6),dp.width/2,dp.height/6],
+                [dp.width/2,dp.height/3,40,dp.height*(2/3)],
+                [dp.width*(2/3),0,40,dp.height/3+40],
+                [dp.width/2+130,dp.height/3,dp.width*(2/3)-(dp.width/2+90),40],
+                [dp.width-20,dp.height/2]
+            ],
+            third :[
+                [0,dp.height*(5/6),dp.width/6,dp.height/6],
+                [dp.width/6+200,dp.height/2,40,dp.height/2],
+                [dp.width/2,0,40,dp.height*(2/3)],
+                [dp.width/2,0,dp.width/2,40],
+                [dp.width*(2/3),dp.height/4,dp.width/3,dp.height*(3/4)],
+                [dp.width-20,(40+dp.height/4)/2]
+            ],
+            forth :[
+                [0,dp.height*(2/3),dp.width/6,dp.height/3],
+                [dp.width/3,dp.height*(2/3),dp.width/6,dp.height/3],
+                [dp.width/3-3,0,50,dp.height/2],
+                [dp.width*(2/3),dp.height/2,50,dp.height/2],
+                [dp.width*(5/6),dp.height*(2/3),dp.width/6,dp.height/3],
+                [dp.width/2,0,dp.width/4,40],
+                [dp.width-20,dp.height/2]
+            ],
+            fifth :[
+                [0,dp.height*(5/6),dp.width/2-dp.width/10+dp.width/40,dp.height/6],
+                [dp.width/2+dp.width/20+dp.width/40,dp.height*(5/6),dp.width/2-dp.width/40,dp.height/6],
+                [dp.width/2-dp.width/10,dp.height/3,dp.width/20,dp.height*(2/3)],
+                [dp.width/2+dp.width/20,dp.height/3,dp.width/20,dp.height*(2/3)],
+                [0,0,dp.width,20],
+                [dp.width/4,dp.height/3,dp.width/4-dp.width/20,40],
+                [dp.width/2+dp.width/20,dp.height/3,dp.width/4-dp.width/20,40],
+                [0,dp.height/2+40,dp.width/4,40],
+                [dp.width*(3/4),dp.height/2+40,dp.width/4,40],
+                [dp.width-40,0,40,dp.height/2+40],
+                [0,0,40,dp.height/2+40],
+                [dp.width-20,(dp.height/2+80+dp.height*(5/6))/2]
+            ],
+            sixth :[
+                [0,dp.height*(5/6),dp.width,dp.height/6],
+                [0,0,dp.width,40],
+                [dp.width-40,0,40,dp.height],
+                []
+            ]
+        }
+        //↑stage_detaの記入順[x,y,w,h]
+        let numToname = ["first","second","third","forth","fifth","sixth"];
+        let stage_index = 1;
+        let stage_num = numToname[stage_index-1];
+		let stage_deta =change_stage[stage_num];
+
+        function expand() {
+            first.style.display = "block";
+            second.style.display = "block";
+            rem.style.display = "none";
+            clo.style.display = "block";
+        }
+
+        function shut() {
+            first.style.display = "none";
+            second.style.display = "none";
+            rem.style.display = "block";
+            clo.style.display = "none";
+        }
+
+        const p_spawn = {
+            first :dp.height/2-36,
+            second :dp.height/2-36,
+            third :dp.height/2-36,
+            forth :dp.height/2-36,
+            fifth :dp.height*(3/4),
+            sixth :dp.height/2-36
+        };
+        
+		const player = {
+			x :20,
+			y :p_spawn[numToname[stage_index-1]],
+			g :0,
+			w :60,
+			h :60,
+			v :6,
+            a :1
+		}
+        const img_p = new Image();
+        img_p.src = "player.png";
+
+        const arrow = {
+            x :player.x + player.w/2,
+            y :player.y + player.h/2,
+            v :20
+        }
+		
+		function draw_p () {
+			/*player.y = dp.height/2;
+			player.x = dp.width/2;*/
+			ctx.beginPath();
+			/*ctx.fillStyle = "black";
+			ctx.fillRect(player.x,player.y,player.w,player.h);
+			ctx.fill();*/
+            ctx.translate(player.x+player.w/2,player.y+player.h/2);
+            ctx.scale(player.a,1);
+            ctx.drawImage(img_p,-player.w/2,-player.h/2,player.w,player.h);
+            ctx.setTransform(1,0,0,1,0,0);
+		}
+		
+		let istouch = {
+		    r :false,
+		    l :false,
+		    u :false,
+		    d :false
+		}
+		
+		let wastouch = {
+		    r :false,
+		    u :false,
+		    u :false,
+		    d :false
+		}
+
+        let overX = 0;
+        let overY = 0;
+        
+		function repair_p(sx,sy,sw,sh,px,py,pw,ph,type) {
+            if (type == "stage" && sx <= px + pw && sx + sw >= px && sy <= py + ph && sy + sh >= py) {
+                overX = Math.min(px + pw,sx + sw) - Math.max(px,sx);
+                overY = Math.min(py + ph,sy + sh) - Math.max(py,sy);
+                if (sx + sw > px && sx + sw < px + pw && overX < overY) {//stageの右側にめり込んだ時
+                    player.x += overX;
+                    //console.log(overX);
+                    istouch.l = true;
+                } else if (sx < px + pw && sx > px && overX < overY) {//stageの左側にめり込んだ時
+                    player.x -= overX;
+                    //console.log(overX);
+                    istouch.r = true;
+                };
+                if (sy < py + ph && sy > py && overY < overX) {//stageの上側にめり込んだ時
+                    //console.log("run");
+                    if (player.g > 0) player.g = 0;
+                    player.y -= overY;
+                    istouch.d = true;
+                } else if (sy + sh > py && sy + sh < py + ph && overY < overX) {//stageの下側にめり込んだ時
+                    //console.log("run");
+                    if (player.g < 0) player.g = 0;
+                    player.y += overY;
+                    istouch.u = true;
+                };
+            };
+            if (type == "lift" && sx <= px + pw && sx + sw >= px && sy <= py + ph && sy + sh >= py) {
+                overY = Math.min(py + ph,sy + sh) - Math.max(py,sy);
+                if (sy < py + ph && sy > py) {
+                    if (player.g >= 0) player.g = 0;
+                    player.y -= overY;
+                    istouch.d = true;
+                };
+            };
+			wastouch.r = istouch.r;
+			wastouch.l = istouch.l;
+			wastouch.u = istouch.u;
+			wastouch.d = istouch.d;
+		}
+
+        const treasure = new Image();
+        treasure.src = "treasure_box.png";
+        let t_w =0;
+        let t_h =0;
+        treasure.addEventListener("load",(event) => {
+            t_w = treasure.naturalWidth;
+            t_h = treasure.naturalHeight;
+        });
+        let time_e;
+        let time_t;
+        
+		function draw_s() {
+			for (let i = 0 ; i <= stage_deta.length-2 ; i++) {
+				ctx.beginPath();
+				ctx.fillStyle="brown";
+				ctx.fillRect(stage_deta[i][0],stage_deta[i][1],stage_deta[i][2],stage_deta[i][3]);
+				repair_p(stage_deta[i][0],stage_deta[i][1],stage_deta[i][2],stage_deta[i][3],player.x,player.y,player.w,player.h,"stage");
+			}
+            if (stage_num == "sixth") {
+                if (time_e == null) {
+                    time_e = performance.now();
+                    time_t = Math.trunc((time_e-time_s)/60000)+"m"+Math.trunc((time_e-time_s)/1000)%60+"s";
+                    time.innerText = time_t;
+                }
+                ctx.translate(dp.width/2,dp.height*(5/6));
+                ctx.drawImage(treasure,-t_w/2,-t_h,t_w,t_h);
+                ctx.setTransform(1,0,0,1,0,0);
+            }
+            ctx.beginPath();
+            ctx.fillStyle = "white";
+            ctx.font = "75px sans-serif"
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            
+            ctx.fillText("→",stage_deta[stage_deta.length-1][0],stage_deta[stage_deta.length-1][1]);
+		}
+		
+		const keys={};
+		document.addEventListener("keydown",e=>{
+    		if (["ArrowUp","ArrowDown","ArrowRight","ArrowLeft"].includes(e.key)){
+        		e.preventDefault();
+    		}
+    		keys[e.key]=true;
+		});
+		document.addEventListener("keyup",e=>{
+    		keys[e.key]=false;
+		});
+
+		let push_a = false;
+		let push_w = false;
+		let clientX;
+		let clientY;
+		
+				
+		document.addEventListener('mousemove',(event) => {
+			const rect = dp.getBoundingClientRect();
+			clientX = event.clientX - rect.left;
+			clientY = event.clientY - rect.top;
+		});
+		
+		let angle = 0;//フックの軌道ライン用
+		let e_x = 0;
+		let e_y = 0;
+
+        function draw_a(px,py,ax,ay) {//矢印描画
+            ctx.beginPath();
+            ctx.strokeStyle = "white";
+            ctx.moveTo(player.x+player.w/2,player.y+player.h/2);
+            ctx.lineTo(arrow.x,arrow.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.translate(arrow.x,arrow.y);
+            ctx.rotate(Math.atan2(arrow.y - (player.y+player.h/2),arrow.x - (player.x+player.w/2)));
+            ctx.fillStyle = "blue";
+            ctx.moveTo(0,0);
+            ctx.lineTo(-15,-15);
+            ctx.lineTo(-15,15);
+            ctx.fill();
+            ctx.setTransform(1,0,0,1,0,0);
+        }
+
+        let a_angle = 0;//フックが引き寄せる角度
+        let t_angle = 0;//引き寄せ途中の角度
+        let launched = false;
+        let isin = {
+            r:false,
+            l:false,
+            u:false,
+            d:false
+        }
+
+        function rect(ax,ay,sx,sy,sw,sh) {
+            if (sx <= ax && sx+arrow.v >= ax && (sy <= ay && sy+sh >= ay)) {//stageの左側より右
+                isin.l = true;
+            }
+            if (sx+sw >= ax && sx+sw-arrow.v <= ax && (sy <= ay && sy+sh >= ay)) {//stageの右側より左
+                isin.r = true;
+            }
+            if (sy <= ay && sy+arrow.v >= ay && (sx <= ax && sx+sw >= ax)) {
+                isin.u = true;
+            }
+            if (sy+sh >= ay && sy+sh-arrow.v <= ay && (sx <= ax && sx+sw >= ax)) {
+                isin.d = true;
+            }
+            return(sx <= ax && sx+sw >= ax && sy <= ay && sy+sh >= ay)
+        }//hookがblockに触れているかどうかの判定
+
+        let pulling = false;
+        let old_p = {
+            x: player.x + player.w/2,
+            y: player.y + player.h/2
+        }
+        let same_count = 0;
+        
+		function draw_r() {
+			if (push_a) {
+				ctx.strokeStyle = "black";
+				ctx.beginPath();
+				ctx.setLineDash([5,5]);
+				angle = Math.atan2(clientY - (player.y+player.h/2),Math.abs(clientX - (player.x+player.w/2)));
+				//↓距離設定
+				//↓e_x
+				if (Math.trunc(clientY) == player.y + player.h/2) {
+					e_x = clientX;
+				} else {
+                    let tmp = (clientX - (player.x+player.w/2))/Math.abs(clientX - (player.x+player.w/2));
+                    e_x = player.x + player.w/2 + dp.width * tmp;
+				}
+				//↓e_y
+				if (Math.trunc(clientX) == player.x + player.w/2) {
+					if (player.y + player.h/2 < clientY){
+						e_y = dp.height;
+					} else {
+						e_y = 0;
+					}
+				} else {
+					e_y = player.y + player.h/2 + dp.width * Math.tan(angle);
+				}
+				ctx.moveTo(player.x + player.w/2,player.y + player.h/2);
+				ctx.lineTo(e_x,e_y);
+                ctx.stroke();
+				ctx.setLineDash([]);
+			}
+			if (push_w || launched) {
+                isin = {
+                    r:false,
+                    l:false,
+                    u:false,
+                    d:false
+                }
+                let t_count = 0;
+                for (let i = 0;i < stage_deta.length;i++) {
+                    if (rect(arrow.x,arrow.y,stage_deta[i][0],stage_deta[i][1],stage_deta[i][2],stage_deta[i][3])){
+                        t_angle = Math.atan2(arrow.y - (player.y+player.h/2),arrow.x - (player.x+player.w/2));
+                        if (!(istouch.r&&istouch.l)) {
+                            player.x += arrow.v*Math.cos(t_angle);
+                        }
+                        if (!(istouch.d&&istouch.u)) {
+                            player.y += arrow.v*Math.sin(t_angle);
+                        }
+                        if (Math.trunc(old_p.x)==Math.trunc(player.x+player.w/2)&&Math.trunc(old_p.y)==Math.trunc(player.y+player.h/2)) {
+                            same_count++;
+                        } else {
+                            same_count = 0;
+                        }
+                        player.g = 0;
+                        if (isin.l)arrow.x = stage_deta[i][0];
+                        if (isin.u)arrow.y = stage_deta[i][1];
+                        if (isin.r)arrow.x = stage_deta[i][0]+stage_deta[i][2];
+                        if (isin.d)arrow.y = stage_deta[i][1]+stage_deta[i][3];
+                        break;
+                    }
+                    t_count++;
+                }//stageに触れたかどうかの判定処理
+                for (let i = 0;i < trap_deta.length;i++) {
+                    if (rect(arrow.x,arrow.y,trap_deta[i][0],trap_deta[i][1],trap_deta[i][2],trap_deta[i][3]) && trap_deta[i][4] == "hole") {
+                        t_angle = Math.atan2(arrow.y - (player.y+player.h/2),arrow.x - (player.x+player.w/2));
+                        if (!(istouch.r && istouch.l)) {
+                            player.x += arrow.v*Math.cos(t_angle);
+                        }
+                        if (!(istouch.d && istouch.u)) {
+                            player.y += arrow.v*Math.sin(t_angle);
+                        }
+                        if (Math.trunc(old_p.x)==Math.trunc(player.x+player.w/2)&&Math.trunc(old_p.y)==Math.trunc(player.y+player.h/2)) {
+                            same_count++;
+                        } else {
+                            same_count = 0;
+                        }
+                        player.g = 0;
+                        if (isin.l)arrow.x = trap_deta[i][0];
+                        if (isin.u)arrow.y = trap_deta[i][1];
+                        if (isin.r)arrow.x = trap_deta[i][0]+trap_deta[i][2];
+                        if (isin.d)arrow.y = trap_deta[i][1]+trap_deta[i][3];
+                        break;
+                    }
+                }//holeに触れたかどうかの判定処理
+                
+                if (t_count == stage_deta.length && !(isin.r||isin.l||isin.u||isin.d)) {
+                    arrow.x += arrow.v*Math.cos(a_angle);
+                    arrow.y += arrow.v*Math.sin(a_angle);
+                }//触れてなければ動かす
+				draw_a(player.x + player.w/2,player.y + player.h/2,arrow.x,arrow.y);//矢印描画
+                if (arrow.x < 0 || arrow.x > dp.width || arrow.y < 0 || arrow.y > dp.height) {
+                    same_count = 0;
+                    arrow.x = player.x + player.w/2;
+                    arrow.y = player.y + player.h/2;
+                    launched = false;
+                }
+                if ((arrow.x < 0 || arrow.x > dp.width || arrow.y < 0 || arrow.y > dp.height) || 
+                    (player.x < arrow.x && player.x+player.w > arrow.x && player.y < arrow.y && player.y+player.h > arrow.y) && (isin.r||isin.l||isin.u||isin.d) ||
+                    same_count==10) {
+                    same_count = 0;
+                    arrow.x = player.x + player.w/2;
+                    arrow.y = player.y + player.h/2;
+                    launched = false;
+                    interval_hook = 0;
+                }//端に触れた時,playerに触れた時のリセット
+			}
+		}
+
+        let lift = {
+            first :[],
+            second :[],
+            third :[
+                [dp.width/6+40,dp.height*(4/6),160,40,0,dp.height/6],
+                [dp.width/2-80,dp.height*(5/6),160,40,dp.width/12,0]
+            ],
+            forth :[],
+            fifth :[],
+            sixth :[]
+        }//左から順にx,y,w,h,xr,yr
+        let lift_deta = lift[stage_num];
+        let time_roll = 0;
+        let old_lx = [];
+        let old_ly = [];
+        for (let i = 0;i <= lift_deta.length-1 ; i++) {
+            old_lx.push(lift_deta[i][0]);
+            old_ly.push(lift_deta[i][1]);
+        }
+
+        function draw_l() {
+			for (let i = 0 ; i <= lift_deta.length-1 ; i++) {
+				ctx.beginPath();
+				ctx.fillStyle="orange";
+				ctx.fillRect(lift_deta[i][0] + lift_deta[i][4]*Math.cos(time_roll*Math.PI/180),
+                             lift_deta[i][1] + lift_deta[i][5]*Math.sin(time_roll*Math.PI/180),
+                             lift_deta[i][2],
+                             lift_deta[i][3]);
+				repair_p(lift_deta[i][0] + lift_deta[i][4]*Math.cos(time_roll*Math.PI/180),
+                            lift_deta[i][1] + lift_deta[i][5]*Math.sin(time_roll*Math.PI/180),
+                            lift_deta[i][2],
+                            lift_deta[i][3],
+                            player.x,
+                            player.y,
+                            player.w,
+                            player.h,
+                            "lift");
+                if (Math.trunc(player.y+player.h) == Math.trunc(lift_deta[i][1] + lift_deta[i][5]*Math.sin(time_roll*Math.PI/180)) && 
+                    ((Math.trunc(player.x) >= Math.trunc(lift_deta[i][0]+lift_deta[i][4]*Math.cos(time_roll*Math.PI/180)) &&
+                    Math.trunc(player.x) <= Math.trunc(lift_deta[i][0]+lift_deta[i][4]*Math.cos(time_roll*Math.PI/180)+lift_deta[i][2])) ||
+                    (Math.trunc(player.x+player.w) >= Math.trunc(lift_deta[i][0]+lift_deta[i][4]*Math.cos(time_roll*Math.PI/180)) &&
+                    Math.trunc(player.x+player.w) <= Math.trunc(lift_deta[i][0]+lift_deta[i][4]*Math.cos(time_roll*Math.PI/180)+lift_deta[i][2]))
+                   )) {
+                    player.x += lift_deta[i][0] + lift_deta[i][4]*Math.cos(time_roll*Math.PI/180) - old_lx[i];
+					player.y = lift_deta[i][1] + lift_deta[i][5]*Math.sin((1+time_roll)*Math.PI/180) - player.h;
+                }
+                old_lx[i] = lift_deta[i][0] + lift_deta[i][4]*Math.cos(time_roll*Math.PI/180);
+                old_ly[i] = lift_deta[i][1] + lift_deta[i][5]*Math.sin(time_roll*Math.PI/180);
+			}
+        }
+
+        function draw_recast() {
+            ctx.beginPath();
+            ctx.fillStyle = "black";
+            ctx.arc(player.x+player.w+25,player.y-25,25,0,2*Math.PI,false);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.fillStyle = "blue";
+            ctx.moveTo(player.x+player.w+25,player.y-25);
+            ctx.lineTo(player.x+player.w+25,player.y-50);
+            ctx.arc(player.x+player.w+25,player.y-25,23,-Math.PI/2,2*Math.PI*(interval_hook/100)-Math.PI/2,false);
+            ctx.lineTo(player.x+player.w+25,player.y-25);
+            ctx.fill();
+        }
+
+        let trap = {
+            first :[],
+            second :[],
+            third :[],
+            forth :[
+                [dp.width/6,dp.height*(2/3),dp.width/6,dp.height/3,"hole",0],
+                [dp.width*(2/3),dp.height/2,50,60,"spike",2]
+            ],
+            fifth :[],
+            sixth :[]
+        };//左から順にx,y,w,h,type,etc.
+        let trap_deta = trap[stage_num];
+        function touchTospike(ax,ay,px,py,pw,ph) {
+            return(px<=ax && px+pw>=ax && py<=ay && py+ph>=ay);
+        };
+        function draw_spike(x,y,w,h,piece) {
+            ctx.beginPath();
+            ctx.fillStyle = "red";
+            ctx.moveTo(x,y);
+            let tmp_w = w/piece;
+            for (let i = 1;i < piece+1; i++) {
+                ctx.lineTo(x+tmp_w*(i-1),y);
+                ctx.lineTo(x+tmp_w*(i-1)+tmp_w/2,y-h);
+                ctx.lineTo(x+tmp_w*i,y);
+                if (touchTospike(x+tmp_w*(i-1),y,player.x,player.y,player.w,player.h) ||
+                    touchTospike(x+tmp_w*(i-1)+tmp_w/2,y-h,player.x,player.y,player.w,player.h) ||
+                    touchTospike(x+tmp_w*i,y,player.x,player.y,player.w,player.h)) {
+                    player.x = 20;
+                    player.y = p_spawn[stage_num];
+                    player.g = 0;
+                    same_count = 0;
+                    arrow.x = player.x + player.w/2;
+                    arrow.y = player.y + player.h/2;
+                    launched = false;
+                };
+            }
+            ctx.lineTo(x+w,y);
+            ctx.fill();
+        }
+        function draw_trap() {
+            for (let i = 0;i <= trap_deta.length-1;i++) {
+                switch (trap_deta[i][4]) {
+                        case "hole":
+                            ctx.beginPath();
+                            ctx.fillStyle = "brown";
+                            ctx.fillRect(trap_deta[i][0],trap_deta[i][1],trap_deta[i][2],trap_deta[i][3]);
+                            if ((Math.trunc(player.y+player.h) >= Math.trunc(trap_deta[i][1]) &&
+                                Math.trunc(player.x) >= Math.trunc(trap_deta[i][0]) &&
+                                Math.trunc(player.x+player.w) <= Math.trunc(trap_deta[i][0]+trap_deta[i][2]))) {
+                                //if (trap_deta[i][5] == 0)trap_deta[i][1] += 20;
+                                trap_deta[i][5] += 0.5;
+                                player.g += 0.5;
+                                trap_deta[i][1] += trap_deta[i][5]/10;
+                            } else if (trap_deta[i][5] !== 0) {
+                                trap_deta[i][5] += 0.5;
+                                trap_deta[i][1] += trap_deta[i][5]/10;
+                            }
+                            repair_p(trap_deta[i][0],trap_deta[i][1],trap_deta[i][2],trap_deta[i][3],player.x,player.y,player.w,player.h,"stage");
+                            break;
+                        case "spike":
+                            draw_spike(trap_deta[i][0],trap_deta[i][1],trap_deta[i][2],trap_deta[i][3],trap_deta[i][5]);
+                            break;
+                }
+            }
+        }
+
+        let p_r = Math.sqrt(player.w**2/4 + player.h**2/4);
+        let interval_hook = 100;
+        let remain_t = 20;
+
+        let enemy = {
+            first :[],
+            second :[],
+            third :[],
+            forth :[],
+            fifth :[
+                [dp.width/6-15,dp.height*(6/12),40,30,dp.width/8,0,180],
+                [dp.width/2-15,dp.height/4,40,30,dp.width/4,0,90],
+                [dp.width*(5/6)-15,dp.height*(6/12),40,30,dp.width/8,0,0]
+            ],
+            sixth :[]
+        };//左から順にx,y,w,h,xr,yr,ex_t
+
+        let enemy_deta = enemy[stage_num];
+        const img_e = new Image();
+        img_e.src = "enemy.png";
+
+        function draw_e() {
+            for (let i = 0;i <= enemy_deta.length-1;i++) {
+                /*ctx.beginPath();
+                ctx.fillStyle = "purple";
+                ctx.roundRect(enemy_deta[i][0]+enemy_deta[i][4]*Math.cos((time_roll+enemy_deta[i][6])*(Math.PI/180)),
+                              enemy_deta[i][1]+enemy_deta[i][5]*Math.sin((time_roll+enemy_deta[i][6])*(Math.PI/180)),
+                              enemy_deta[i][2],enemy_deta[i][3],enemy_deta[i][0]/5);
+                ctx.fill();*/
+                ctx.translate(enemy_deta[i][0]+enemy_deta[i][4]*Math.cos((time_roll+enemy_deta[i][6])*(Math.PI/180))+enemy_deta[i][2]/2,enemy_deta[i][1]+enemy_deta[i][5]*Math.sin((time_roll+enemy_deta[i][6])*(Math.PI/180))+enemy_deta[i][3]/2);
+                if (Math.sin((time_roll+enemy_deta[i][6])*(Math.PI/180))>=0) {
+                    ctx.scale(-1,1);
+                }
+                ctx.drawImage(img_e,-enemy_deta[i][2]/2,-enemy_deta[i][3]/2,enemy_deta[i][2],enemy_deta[i][3]);
+                ctx.setTransform(1,0,0,1,0,0);
+                if (player.x<=enemy_deta[i][0]+enemy_deta[i][2]+enemy_deta[i][4]*Math.cos((time_roll+enemy_deta[i][6])*(Math.PI/180)) &&
+                   player.x+player.w>=enemy_deta[i][0]+enemy_deta[i][4]*Math.cos((time_roll+enemy_deta[i][6])*(Math.PI/180)) &&
+                   player.y<=enemy_deta[i][1]+enemy_deta[i][3]+enemy_deta[i][5]*Math.sin((time_roll+enemy_deta[i][6])*(Math.PI/180)) &&
+                   player.y+player.h>=enemy_deta[i][1]+enemy_deta[i][5]*Math.sin((time_roll+enemy_deta[i][6])*(Math.PI/180))) {
+                    player.x = 20;
+                    player.y = p_spawn[stage_num];
+                    player.g = 0;
+                    same_count = 0;
+                    arrow.x = player.x + player.w/2;
+                    arrow.y = player.y + player.h/2;
+                    launched = false;
+                }
+            }
+        };
+
+        function updateSize() {
+            //alert("resized");
+            dp.width = window.innerWidth;
+            dp.height = window.innerHeight;
+            change_stage = {
+                first :[
+                    [0,dp.height*(5/6),dp.width,dp.height/6],
+                    [dp.width/6,dp.height*(4/6),dp.width-dp.width/6,dp.height*(2/6)],
+                    [dp.width/2-160,dp.height*(4/6)-225,160,40],
+                    [dp.width*(3/4),dp.height/2,dp.width/4,dp.height*(3/6)],
+                    [dp.width-20,dp.height/3]
+                ],
+                second :[
+                    [0,0,dp.width,dp.height/6],
+                    [dp.width/3-160,dp.height/3,160,40],
+                    [0,dp.height*(5/6),dp.width/6,dp.height/6],
+                    [dp.width/3-40,dp.height/3,40,dp.height*(2/3)],
+                    [dp.width/2,dp.height*(5/6),dp.width/2,dp.height/6],
+                    [dp.width/2,dp.height/3,40,dp.height*(2/3)],
+                    [dp.width*(2/3),0,40,dp.height/3+40],
+                    [dp.width/2+130,dp.height/3,dp.width*(2/3)-(dp.width/2+90),40],
+                    [dp.width-20,dp.height/2]
+                ],
+                third :[
+                    [0,dp.height*(5/6),dp.width/6,dp.height/6],
+                    [dp.width/6+200,dp.height/2,40,dp.height/2],
+                    [dp.width/2,0,40,dp.height*(2/3)],
+                    [dp.width/2,0,dp.width/2,40],
+                    [dp.width*(2/3),dp.height/4,dp.width/3,dp.height*(3/4)],
+                    [dp.width-20,(40+dp.height/4)/2]
+                ],
+                forth :[
+                    [0,dp.height*(2/3),dp.width/6,dp.height/3],
+                    [dp.width/3,dp.height*(2/3),dp.width/6,dp.height/3],
+                    [dp.width/3-3,0,50,dp.height/2],
+                    [dp.width*(2/3),dp.height/2,50,dp.height/2],
+                    [dp.width*(5/6),dp.height*(2/3),dp.width/6,dp.height/3],
+                    [dp.width/2,0,dp.width/4,40],
+                    [dp.width-20,dp.height/2]
+                ],
+                fifth :[
+                    [0,dp.height*(5/6),dp.width/2-dp.width/10+dp.width/40,dp.height/6],
+                    [dp.width/2+dp.width/20+dp.width/40,dp.height*(5/6),dp.width/2-dp.width/40,dp.height/6],
+                    [dp.width/2-dp.width/10,dp.height/3,dp.width/20,dp.height*(2/3)],
+                    [dp.width/2+dp.width/20,dp.height/3,dp.width/20,dp.height*(2/3)],
+                    [0,0,dp.width,20],
+                    [dp.width/4,dp.height/3,dp.width/4-dp.width/20,40],
+                    [dp.width/2+dp.width/20,dp.height/3,dp.width/4-dp.width/20,40],
+                    [0,dp.height/2+40,dp.width/4,40],
+                    [dp.width*(3/4),dp.height/2+40,dp.width/4,40],
+                    [dp.width-40,0,40,dp.height/2+40],
+                    [0,0,40,dp.height/2+40],
+                    [dp.width-20,(dp.height/2+80+dp.height*(5/6))/2]
+                ],
+                sixth :[
+                    [0,dp.height*(5/6),dp.width,dp.height/6],
+                    [0,0,dp.width,40],
+                    [dp.width-40,0,40,dp.height],
+                    []
+                ]
+            };
+            enemy = {
+                first :[],
+                second :[],
+                third :[],
+                forth :[],
+                fifth :[
+                    [dp.width/6-15,dp.height*(6/12),40,30,dp.width/8,0,180],
+                    [dp.width/2-15,dp.height/4,40,30,dp.width/4,0,90],
+                    [dp.width*(5/6)-15,dp.height*(6/12),40,30,dp.width/8,0,0]
+                ],
+                sixth :[]
+            };
+            lift = {
+                first :[],
+                second :[],
+                third :[
+                    [dp.width/6+40,dp.height*(4/6),160,40,0,dp.height/6],
+                    [dp.width/2-80,dp.height*(5/6),160,40,dp.width/12,0]
+                ],
+                forth :[],
+                fifth :[],
+                sixth :[]
+            };
+            trap = {
+                first :[],
+                second :[],
+                third :[],
+                forth :[
+                    [dp.width/6,dp.height*(2/3),dp.width/6,dp.height/3,"hole",0],
+                    [dp.width*(2/3),dp.height/2,50,60,"spike",2]
+                ],
+                fifth :[],
+                sixth :[]
+            };
+            stage_deta =change_stage[stage_num];
+            lift_deta = lift[stage_num];
+            enemy_deta = enemy[stage_num];
+            trap_deta = trap[stage_num];
+        };
+        
+		function repeat() {
+            window.addEventListener("resize",updateSize);
+            if (!game_start) {
+                requestAnimationFrame(repeat);
+                return;
+            };
+            if (interval_hook < 100 && !launched)interval_hook++;
+			ctx.fillStyle = "gray";
+            ctx.fillRect(0,0,dp.width,dp.height);
+            old_p.x = player.x + player.w/2;
+            old_p.y = player.y + player.h/2;
+			if (keys["d"]&&player.x+player.w<=dp.width&&!launched){
+				player.x += player.v;
+                player.a = 1;
+			}
+			if (keys["a"]&&player.x>=0&&!launched){
+				player.x -= player.v;
+                player.a = -1;
+			}
+		    //console.log("x"+Math.trunc(old_p.x)+","+Math.trunc(player.x+player.w/2));
+            old_p.y = player.y + player.h/2;
+			if (player.y+player.h<=dp.height){
+				if (!istouch.d){
+					if (player.g <= player.v*2.5)player.g +=0.5;
+				};
+				player.y += player.g;
+			}
+			if (keys["w"]&&istouch.d&&!launched){
+				player.g = -player.v*2.5;
+				player.y += player.g;
+			}
+            //console.log("y"+Math.trunc(old_p.y)+","+Math.trunc(player.y+player.h/2));
+            if (player.y+player.h >= dp.height) {
+                player.x = 20;
+                player.y = p_spawn[numToname[stage_index-1]];
+                player.g = 0;
+                same_count = 0;
+                arrow.x = player.x + player.w/2;
+                arrow.y = player.y + player.h/2;
+                launched = false;
+                interval_hook = 100;
+            }
+			
+			if (keys["s"]){
+				push_a = true;
+			} else {
+				push_a = false;
+			}
+			let angle = Math.atan2(clientY - (player.y+player.h/2),clientX - (player.x+player.w/2));
+			if (keys ["s"] && (keys["q"] || keys["e"]) && istouch.d && interval_hook == 100){
+                if (push_a && !launched){
+                    a_angle = angle;
+                }
+                if (!launched) {
+                    arrow.x = player.x + player.w/2;
+                    arrow.y = player.y + player.h/2;
+                    launched = true;
+                }
+				push_w = true;
+			} else {
+				push_w = false;
+			}
+            istouch = {
+				r :false,
+				l :false,
+				u :false,
+				d :false
+			}
+            draw_l();
+            draw_e();
+			draw_s();
+            draw_trap();
+			draw_r();
+            if (interval_hook < 100) {
+                draw_recast();
+                remain_t = 0;
+            } else {
+                if (remain_t < 20){
+                    draw_recast();
+                    remain_t++;
+                }
+            }
+			draw_p();
+			ctx.beginPath();
+            ctx.font = '30px sans-serif';
+            ctx.fillStyle = "orange";
+			ctx.textBaseline = "bottom";
+			ctx.fillAlign = "center";
+			//ctx.fillText(Math.sin(time_roll*(Math.PI/180))+","+Math.cos(time_roll*(Math.PI/180)),player.x,player.y);
+            time_roll++;
+            if (player.x+player.w >= dp.width) {
+                //console.log("stage_changed,"+player.x+","+player.y+","+stage_index);
+                stage_index++;
+                stage_num = numToname[stage_index-1];
+                if (stage_num == "first") {
+                    first.style.display = "block";
+                } else {
+                    first.style.display = "none";
+                }
+                if (stage_num == "second") {
+                    second.style.display = "block";
+                } else {
+                    second.style.display = "none";
+                }
+                if (stage_index >= 3 && stage_index <= 5) {
+                    //mes.style.display = "block";
+                    rem.style.display = "block";
+                } else {
+                    //mes.style.display = "none";
+                    rem.style.display = "none";
+                    if (clo.style.display == "block") {
+                        clo.style.display = "none";
+                    }
+                }
+                if (stage_num == "sixth") {
+                    sixth.style.display = "block";
+                } else {
+                    sixth.style.display = "none";
+                }
+                /*if (stage_num == "first" || stage_num == "second" || stage_num == "sixth") {
+                    mes.style.display = "block";
+                } else {
+                    mes.style.display = "none";
+                }*/
+                stage_deta =change_stage[stage_num];
+                lift_deta = lift[stage_num];
+                enemy_deta = enemy[stage_num];
+                trap_deta = trap[stage_num];
+                player.x = 20;
+                player.y = p_spawn[numToname[stage_index-1]];
+                player.g = 0;
+                same_count = 0;
+                arrow.x = player.x + player.w/2;
+                arrow.y = player.y + player.h/2;
+                launched = false;
+                interval_hook = 100;
+            }
+			requestAnimationFrame(repeat);
+		}
+        let time_s = 0;
+        let game_start = false;
+        function start() {
+            game_start = true;
+            time_s = performance.now();
+            dp.style.display = "block";
+            op.style.display = "none";
+            message.style.display = "block";
+        }
+		repeat();
+	</script>
+</body>
+</html>
