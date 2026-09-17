@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-	<meta charset="UTF-8">
-	<title>treasure</title>
-	<style>
-		#display {
+<!doctype html>
+ 
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    
+    <title>treasure_platformer</title>
+    <meta name="description" content="思いたったらすぐ開発. プログラミングに革命を..." />
+    
+    <style>#display {
 			position: absolute;
 			left: 0px;
 			top: 0px;
@@ -82,12 +87,23 @@
             border: black 1px solid;
             display: none;
         }
-	</style>
-</head>
-<body>
-	<header>
+        #rank {
+          background-color: gray;
+          border: black 1px solid;
+          padding: 5px;
+        }
+        #record {
+          width: auto;
+        }</style>
+  </head>
+  <body>
+    <header>
         <div id = "option">
-            <img id = "title" src = "title.png"><br>
+          <div style = "position: absolute; top: 0; left: 0;">
+            <button id = "record">タイム記録</button>
+            <div id = "rank" style = "display: none;">読み込みに時間がかかることがあります</div>
+          </div>
+            <img id = "title" src = "https://imgur.com/3TLjaYq.png"><br>
             <div id = "info">作品概要<br>青色のplayerを操作して5つのステージを突破せよ！<br>スタートからゴールまでにかかった時間も測定されるので<br>速くゴールできるように頑張ってください！<br><br>
             ※注意※<br>プレイ中に不自然な挙動を起こす可能性があります<br>プレイに支障が出る場合はサイトを更新して始めからやり直してください<br>更新しても同じ不具合が発生する場合はPC部の方にお知らせください</div>
             <button onclick = start()>スタート</button>
@@ -101,11 +117,11 @@
             <button id = "close" class = "manual" onclick = shut()>閉じる</button>
             <div id = "tips3" style = "display: none;">CLEAR!<br>time↓
                 <div id = "time"></div>
+                <div id = "waiting">記録中</div>
             </div>
         </div>
 	</header>
-	<script>
-		const dp = document.getElementById("display");
+    <script>const dp = document.getElementById("display");
         const op = document.getElementById("option");
         const message = document.getElementById("mes");
         const time = document.getElementById("time");
@@ -114,8 +130,103 @@
         const sixth = document.getElementById("tips3");
         const rem = document.getElementById("remind");
         const clo = document.getElementById("close");
+        const rec = document.getElementById("record");
+        const rank = document.getElementById("rank");
+        const wait = document.getElementById("waiting");
+        rec.addEventListener("click",()=> {
+          if (rank.style.display == "none") {
+            rec.innerHTML = "閉じる";
+            rank.style.display = "block";
+          }else {
+            rec.innerHTML = "タイム記録";
+            rank.style.display = "none";
+          }
+        })
         dp.width = window.innerWidth;
 		dp.height = window.innerHeight;
+		const GAS_URL = "https://script.google.com/macros/s/AKfycbyStWxEz3kjxlXx5tSCPPWu4nwEyOvCGahTWRrYlMzE_xaIBhaBWIVy9SRGrSIYSEI5kw/exec";
+		async function sendData(t) {
+		  const data = {
+		    time: t
+		  };
+		  
+		  try {
+		    const response = await fetch(GAS_URL, {
+		      method: "POST",
+		      mode: "cors",
+		      headers: {
+		        "Content-type": "text/plain"
+		      },
+		      body: JSON.stringify(data)
+		    })
+		    
+		    const result = await response.json();
+		    console.log(result);
+		    wait.innerHTML = "記録完了！";
+		  } catch (error) {
+		    console.log("error occured:", error);
+		  }
+		}
+		let tmp = [];
+		async function getData() {
+		  try {
+		    const response = await fetch(GAS_URL);
+		    
+		    if (!response.ok) {
+		      throw new Error('savers error: ${response.status}');
+		    }
+		    
+		    const list = await response.json();
+		    if (list.length > 0) {
+		      console.log('firstData: ${list[0].time}');
+		      rank.innerHTML = "タイムランキング";
+		    } else {
+		      console.log("no data in spreadSheet");
+		      rank.innerHTML = "no record";
+		    }
+		    console.log("contents",list);
+		    tmp = list.flat();
+		    sort();
+		    for (let i = 0; i < ranking.length; i++) {
+		      const result = document.createElement("div");
+		      result.className = "parts";
+		      result.style.border = "1px black solid";
+		      result.textContent = i+1 +"位:"+ Math.trunc((ranking[i])/60000)+"m"+Math.trunc((ranking[i])/1000)%60+"s";
+		      rank.appendChild(result);
+		      console.log("success");
+		    }
+		    
+		  } catch (error) {
+		    console.log("getData error:",error);
+		    console.log("fail to get data: "+error);
+		  }
+		}
+		let ranking = [];
+		function sort() {
+		  for (let i = 1; i < tmp.length; i++){
+		    for (let j = i; j >= 1; j--) {
+		      if (tmp[j-1] > tmp[j]) {
+		        let n = tmp[j-1];
+		        tmp[j-1] = tmp[j];
+		        tmp[j] = n;
+		        console.log("sort",tmp);
+		      }
+		    }
+		  }
+		  ranking = tmp;
+		  console.log("sorted");
+		}
+		window.onload = ()=> {
+		  getData();
+		}
+		const img = {
+		  player: new Image(),
+		  enemy: new Image(),
+		  box: new Image()
+		}
+		img.player.src = "https://imgur.com/X5CXTdc.jpg";
+		img.enemy.src = "https://imgur.com/qji4vRO.jpg";
+		img.box.src = "https://imgur.com/6craV7J.jpg";
 		const ctx = dp.getContext("2d");
         let change_stage = {
             first :[
@@ -174,11 +285,11 @@
                 []
             ]
         }
-        //↑stage_detaの記入順[x,y,w,h]
-        let numToname = ["first","second","third","forth","fifth","sixth"];
-        let stage_index = 1;
-        let stage_num = numToname[stage_index-1];
-		let stage_deta =change_stage[stage_num];
+//↑stage_detaの記入順[x,y,w,h]
+let numToname = ["first","second","third","forth","fifth","sixth"];
+let stage_index = 1;
+let stage_num = numToname[stage_index-1];
+let stage_deta =change_stage[stage_num];
 
         function expand() {
             first.style.display = "block";
@@ -212,8 +323,6 @@
 			v :6,
             a :1
 		}
-        const img_p = new Image();
-        img_p.src = "player.png";
 
         const arrow = {
             x :player.x + player.w/2,
@@ -230,7 +339,7 @@
 			ctx.fill();*/
             ctx.translate(player.x+player.w/2,player.y+player.h/2);
             ctx.scale(player.a,1);
-            ctx.drawImage(img_p,-player.w/2,-player.h/2,player.w,player.h);
+            ctx.drawImage(img.player,-player.w/2,-player.h/2,player.w,player.h);
             ctx.setTransform(1,0,0,1,0,0);
 		}
 		
@@ -294,9 +403,9 @@
         treasure.src = "treasure_box.png";
         let t_w =0;
         let t_h =0;
-        treasure.addEventListener("load",(event) => {
-            t_w = treasure.naturalWidth;
-            t_h = treasure.naturalHeight;
+        img.box.addEventListener("load",(event) => {
+            t_w = img.box.naturalWidth;
+            t_h = img.box.naturalHeight;
         });
         let time_e;
         let time_t;
@@ -312,10 +421,11 @@
                 if (time_e == null) {
                     time_e = performance.now();
                     time_t = Math.trunc((time_e-time_s)/60000)+"m"+Math.trunc((time_e-time_s)/1000)%60+"s";
+                    sendData(Math.trunc(time_e - time_s));
                     time.innerText = time_t;
                 }
                 ctx.translate(dp.width/2,dp.height*(5/6));
-                ctx.drawImage(treasure,-t_w/2,-t_h,t_w,t_h);
+                ctx.drawImage(img.box,-t_w/2,-t_h,t_w,t_h);
                 ctx.setTransform(1,0,0,1,0,0);
             }
             ctx.beginPath();
@@ -326,8 +436,7 @@
             
             ctx.fillText("→",stage_deta[stage_deta.length-1][0],stage_deta[stage_deta.length-1][1]);
 		}
-		
-		const keys={};
+const keys={};
 		document.addEventListener("keydown",e=>{
     		if (["ArrowUp","ArrowDown","ArrowRight","ArrowLeft"].includes(e.key)){
         		e.preventDefault();
@@ -529,7 +638,6 @@
             old_lx.push(lift_deta[i][0]);
             old_ly.push(lift_deta[i][1]);
         }
-
         function draw_l() {
 			for (let i = 0 ; i <= lift_deta.length-1 ; i++) {
 				ctx.beginPath();
@@ -575,7 +683,7 @@
             ctx.fill();
         }
 
-        let trap = {
+let trap = {
             first :[],
             second :[],
             third :[],
@@ -674,7 +782,7 @@
                 if (Math.sin((time_roll+enemy_deta[i][6])*(Math.PI/180))>=0) {
                     ctx.scale(-1,1);
                 }
-                ctx.drawImage(img_e,-enemy_deta[i][2]/2,-enemy_deta[i][3]/2,enemy_deta[i][2],enemy_deta[i][3]);
+                ctx.drawImage(img.enemy,-enemy_deta[i][2]/2,-enemy_deta[i][3]/2,enemy_deta[i][2],enemy_deta[i][3]);
                 ctx.setTransform(1,0,0,1,0,0);
                 if (player.x<=enemy_deta[i][0]+enemy_deta[i][2]+enemy_deta[i][4]*Math.cos((time_roll+enemy_deta[i][6])*(Math.PI/180)) &&
                    player.x+player.w>=enemy_deta[i][0]+enemy_deta[i][4]*Math.cos((time_roll+enemy_deta[i][6])*(Math.PI/180)) &&
@@ -791,8 +899,7 @@
             enemy_deta = enemy[stage_num];
             trap_deta = trap[stage_num];
         };
-        
-		function repeat() {
+function repeat() {
             window.addEventListener("resize",updateSize);
             if (!game_start) {
                 requestAnimationFrame(repeat);
@@ -941,6 +1048,8 @@
             message.style.display = "block";
         }
 		repeat();
-	</script>
-</body>
+
+</script>
+  </body>
 </html>
+
