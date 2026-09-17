@@ -103,7 +103,7 @@
             <button id = "record">タイム記録</button>
             <div id = "rank" style = "display: none;">読み込みに時間がかかることがあります</div>
           </div>
-            <img id = "title" src = "https://imgur.com/3TLjaYq.png"><br>
+            <img id = "title" src = "title.png"><br>
             <div id = "info">作品概要<br>青色のplayerを操作して5つのステージを突破せよ！<br>スタートからゴールまでにかかった時間も測定されるので<br>速くゴールできるように頑張ってください！<br><br>
             ※注意※<br>プレイ中に不自然な挙動を起こす可能性があります<br>プレイに支障が出る場合はサイトを更新して始めからやり直してください<br>更新しても同じ不具合が発生する場合はPC部の方にお知らせください</div>
             <button onclick = start()>スタート</button>
@@ -224,9 +224,9 @@
 		  enemy: new Image(),
 		  box: new Image()
 		}
-		img.player.src = "https://imgur.com/X5CXTdc.jpg";
-		img.enemy.src = "https://imgur.com/qji4vRO.jpg";
-		img.box.src = "https://imgur.com/6craV7J.jpg";
+		img.player.src = "player.png";
+		img.enemy.src = "enemy.png";
+		img.box.src = "treasure_box.png";
 		const ctx = dp.getContext("2d");
         let change_stage = {
             first :[
