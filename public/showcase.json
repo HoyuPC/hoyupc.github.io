@@ -44,7 +44,7 @@
     "type": "embed",
     "category": "game",
     "flags": ["keyboard_required"],
-    "tags": ["festival_2025"],
+    "tags": ["festival_2025", "festival_2026"],
     "thumbnailSrc": "./showcase/festival_2025/chemical_platformer.webp",
     "src": "./showcase/festival_2025/chemical_platformer.html"
   },
