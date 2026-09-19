@@ -112,7 +112,7 @@
 		<canvas id = "display" style = "display:none"></canvas>
         <div id ="mes" translate = "yes">
             <div id = "tips1" style = "display: block;">移動:aまたはd<br>ジャンプ:w</div>
-            <div id = "tips2" style = "display: none;">フック:s長押し+qまたはe<br>フック発射向き:s長押し+マウス移動</div>
+            <div id = "tips2" style = "display: none;">フック:s長押し+マウスクリック<br>フック発射向き:s長押し+マウス移動</div>
             <button id = "remind" class = "manual" onclick = expand()>操作説明</button>
             <button id = "close" class = "manual" onclick = shut()>閉じる</button>
             <div id = "tips3" style = "display: none;">CLEAR!<br>time↓
@@ -899,6 +899,14 @@ let trap = {
             enemy_deta = enemy[stage_num];
             trap_deta = trap[stage_num];
         };
+let isclicked = false;
+window.addEventListener("mousedown", () => {
+  isclicked = true;
+})
+window.addEventListener("mouseup", () => {
+  isclicked = false;
+})
+      
 function repeat() {
             window.addEventListener("resize",updateSize);
             if (!game_start) {
@@ -948,7 +956,7 @@ function repeat() {
 				push_a = false;
 			}
 			let angle = Math.atan2(clientY - (player.y+player.h/2),clientX - (player.x+player.w/2));
-			if (keys ["s"] && (keys["q"] || keys["e"]) && istouch.d && interval_hook == 100){
+			if (keys ["s"] && isclicked) && istouch.d && interval_hook == 100){
                 if (push_a && !launched){
                     a_angle = angle;
                 }
