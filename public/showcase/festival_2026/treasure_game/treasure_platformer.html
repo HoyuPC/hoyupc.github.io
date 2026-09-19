@@ -956,7 +956,7 @@ function repeat() {
 				push_a = false;
 			}
 			let angle = Math.atan2(clientY - (player.y+player.h/2),clientX - (player.x+player.w/2));
-			if (keys ["s"] && isclicked) && istouch.d && interval_hook == 100){
+			if (keys ["s"] && isclicked && istouch.d && interval_hook == 100){
                 if (push_a && !launched){
                     a_angle = angle;
                 }
